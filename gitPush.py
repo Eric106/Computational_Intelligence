@@ -16,6 +16,7 @@ def gitUpdate(dt_string):
     system('git init')
     system('git add *')
     system('git commit -m '+'"'+dt_string+'"')
+    system('git branch -M main')
     system("git remote add origin https://github.com/Eric106/Computational_Intelligence.git")
-    system('git push origin main')
+    system('git push -u origin main')
 run_server()
