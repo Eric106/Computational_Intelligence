@@ -30,8 +30,8 @@ def get_files_inFolder(folder:str, fileType:str):
 
 def conn_analysis(log_file:str, sample_data:bool):
 
-    list_log_files = get_files_inFolder(".\\","log")
-    list_parq_files = get_files_inFolder(".\\","parq")
+    list_log_files = get_files_inFolder("./","log")
+    list_parq_files = get_files_inFolder("./","parq")
     complete_name_f = log_file.split('.log')[0]+'.parq'
     sample_name_f = log_file.split('.log')[0]+'_sample.parq'
     P_ENGINE = "pyarrow"
