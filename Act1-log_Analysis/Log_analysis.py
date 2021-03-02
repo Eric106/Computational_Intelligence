@@ -1,12 +1,13 @@
 from pandas import DataFrame, read_parquet, read_csv
 from datetime import datetime as dt
 from pprint import pprint
-from time import sleep, time
+from time import time
+from os import listdir
 import numpy as np
 import sys
 
 
-def get_random_sample_data(data: DataFrame, test_ratio: float = 0.1):
+def get_random_sample_data(data: DataFrame, test_ratio: float):
     ''' permutation: Randomly permute a sequence or return a permuted range (ndarray).
                     If x is a multi-dimensional array, it is only shuffled along its first index.'''
     shuffled_indices = np.random.permutation(len(data))
@@ -16,33 +17,47 @@ def get_random_sample_data(data: DataFrame, test_ratio: float = 0.1):
     return data.iloc[test_indices]
 
 
-def log_to_parquet(path_file: str, file_cols: list, parquet_engine: str):
+def log_to_parquet(in_file: str, out_file:str,file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
-    file_name = path_file.split('.log')[0]+'.parq'
-    df = read_csv(path_file, sep="\t", header=None,
+    df = read_csv(in_file, sep="\t", header=None,
                   names=file_cols, low_memory=False)
-    df.to_parquet(file_name, index=False, engine=parquet_engine)
+    df.to_parquet(out_file, index=False, engine=parquet_engine)
     del df
-    return file_name
+    return out_file
 
-
+def get_files_inFolder(folder:str, fileType:str):
+    return list(filter(lambda fileName: fileName[-len(fileType):] == fileType, listdir(folder)))
 #---------------------------------------------------------------------------------------------
 
-def conn_analysis():
-    log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
-                     "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
-    P_ENGINE = "pyarrow"
-    parquet_file = log_to_parquet(
-        path_file="conn.log", file_cols=log_col_names, parquet_engine=P_ENGINE)
-    complete_df = read_parquet(parquet_file, engine=P_ENGINE)
-    sample_df = get_random_sample_data(complete_df)
-    del complete_df
-    sample_df.to_parquet("conn_sample.parq",
-                         index=False, engine=P_ENGINE)
-    df = sample_df
+def conn_analysis(log_file:str, sample_data:bool):
 
-    # df = read_parquet("conn.parq")
-    # df = read_parquet("conn_sample.parq")
+    list_log_files = get_files_inFolder(".\\","log")
+    list_parq_files = get_files_inFolder(".\\","parq")
+    if not log_file in list_log_files:
+            print("ERROR fileNotFound: "+log_file)
+            return None
+    complete_name_f = log_file.split('.log')[0]+'.parq'
+    sample_name_f = log_file.split('.log')[0]+'_sample.parq'
+    print(complete_name_f,sample_name_f)
+    exit()
+    P_ENGINE = "pyarrow"
+    SAMPLE_SIZE = 0.1
+    df = None
+    if complete_name_f in list_parq_files and sample_name_f in list_parq_files:
+        try:
+            log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
+                            "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
+            parquet_file = log_to_parquet(in_file=log_file, out_file=complete_name_f,
+                                        file_cols=log_col_names, parquet_engine=P_ENGINE)
+            complete_df = read_parquet(parquet_file, engine=P_ENGINE)
+            sample_df = get_random_sample_data(complete_df,SAMPLE_SIZE)
+            del complete_df
+            sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
+        except Exception as e:
+            print(e)
+            return
+    else:
+        df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
 
     df["ts"] = df["ts"].astype("float")
     df["ts"] = list(map(lambda date: dt.fromtimestamp(date),
@@ -78,7 +93,7 @@ def conn_analysis():
 def main():
     intiTime = time()
 
-    conn_analysis()
+    conn_analysis(log_file="conn.log", sample_data=True)
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
