@@ -35,7 +35,7 @@ def conn_analysis(log_file:str, sample_data:bool):
     complete_name_f = log_file.split('.log')[0]+'.parq'
     sample_name_f = log_file.split('.log')[0]+'_sample.parq'
     P_ENGINE = "pyarrow"
-    SAMPLE_SIZE = 0.06
+    SAMPLE_SIZE = 0.10
     df = None
     if not (complete_name_f in list_parq_files):
         if not log_file in list_log_files:
