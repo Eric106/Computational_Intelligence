@@ -23,7 +23,6 @@ def log_to_parquet(in_file: str, out_file:str,file_cols: list, parquet_engine: s
                   names=file_cols, low_memory=False)
     df.to_parquet(out_file, index=False, engine=parquet_engine)
     del df
-    return out_file
 
 def get_files_inFolder(folder:str, fileType:str):
     return list(filter(lambda fileName: fileName[-len(fileType):] == fileType, listdir(folder)))
@@ -45,18 +44,19 @@ def conn_analysis(log_file:str, sample_data:bool):
         try:
             log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
                             "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
-            parquet_file = log_to_parquet(in_file=log_file, out_file=complete_name_f,
-                                        file_cols=log_col_names, parquet_engine=P_ENGINE)
+            log_to_parquet(in_file=log_file, out_file=complete_name_f,
+                            file_cols=log_col_names, parquet_engine=P_ENGINE)
         except Exception as e:
             print(e)
             return
     elif sample_data and (not sample_name_f in list_parq_files):
-        complete_df = read_parquet(parquet_file, engine=P_ENGINE)
+        complete_df = read_parquet(complete_name_f, engine=P_ENGINE)
         sample_df = get_random_sample_data(complete_df, SAMPLE_SIZE)
         del complete_df
         sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
-    else:
-        df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
+        del sample_df
+
+    df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
 
     df["ts"] = df["ts"].astype("float")
     df["ts"] = list(map(lambda date: dt.fromtimestamp(date),
@@ -92,7 +92,7 @@ def conn_analysis(log_file:str, sample_data:bool):
 def main():
     intiTime = time()
 
-    conn_analysis(log_file="conn.log", sample_data=False)
+    conn_analysis(log_file="conn.log", sample_data=True)
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
