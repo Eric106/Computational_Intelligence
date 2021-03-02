@@ -33,30 +33,28 @@ def conn_analysis(log_file:str, sample_data:bool):
 
     list_log_files = get_files_inFolder(".\\","log")
     list_parq_files = get_files_inFolder(".\\","parq")
-    if not log_file in list_log_files:
-            print("ERROR fileNotFound: "+log_file)
-            return None
     complete_name_f = log_file.split('.log')[0]+'.parq'
     sample_name_f = log_file.split('.log')[0]+'_sample.parq'
-    print(list_log_files,list_parq_files)
-    print(complete_name_f,sample_name_f)
-    exit()
     P_ENGINE = "pyarrow"
     SAMPLE_SIZE = 0.1
     df = None
-    if not (complete_name_f in list_parq_files and sample_name_f in list_parq_files):
+    if not (complete_name_f in list_parq_files):
+        if not log_file in list_log_files:
+            print("ERROR fileNotFound: "+log_file)
+            return 
         try:
             log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
                             "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
             parquet_file = log_to_parquet(in_file=log_file, out_file=complete_name_f,
                                         file_cols=log_col_names, parquet_engine=P_ENGINE)
-            complete_df = read_parquet(parquet_file, engine=P_ENGINE)
-            sample_df = get_random_sample_data(complete_df,SAMPLE_SIZE)
-            del complete_df
-            sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
         except Exception as e:
             print(e)
             return
+    elif sample_data and (not sample_name_f in list_parq_files):
+        complete_df = read_parquet(parquet_file, engine=P_ENGINE)
+        sample_df = get_random_sample_data(complete_df, SAMPLE_SIZE)
+        del complete_df
+        sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
     else:
         df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
 
@@ -94,13 +92,12 @@ def conn_analysis(log_file:str, sample_data:bool):
 def main():
     intiTime = time()
 
-    conn_analysis(log_file="conn.log", sample_data=True)
+    conn_analysis(log_file="conn.log", sample_data=False)
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
         "m" if elapsedTime >= 60 else str(elapsedTime)+"s"
     print("\nTiempo del proceso --->", elapsedTime)
     sys.exit()
-
 
 main()
