@@ -38,12 +38,13 @@ def conn_analysis(log_file:str, sample_data:bool):
             return None
     complete_name_f = log_file.split('.log')[0]+'.parq'
     sample_name_f = log_file.split('.log')[0]+'_sample.parq'
+    print(list_log_files,list_parq_files)
     print(complete_name_f,sample_name_f)
     exit()
     P_ENGINE = "pyarrow"
     SAMPLE_SIZE = 0.1
     df = None
-    if complete_name_f in list_parq_files and sample_name_f in list_parq_files:
+    if not (complete_name_f in list_parq_files and sample_name_f in list_parq_files):
         try:
             log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
                             "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
