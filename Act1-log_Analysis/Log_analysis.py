@@ -35,7 +35,7 @@ def conn_analysis(log_file:str, sample_data:bool):
     complete_name_f = log_file.split('.log')[0]+'.parq'
     sample_name_f = log_file.split('.log')[0]+'_sample.parq'
     P_ENGINE = "pyarrow"
-    SAMPLE_SIZE = 0.1
+    SAMPLE_SIZE = 0.06
     df = None
     if not (complete_name_f in list_parq_files):
         if not log_file in list_log_files:
@@ -49,7 +49,7 @@ def conn_analysis(log_file:str, sample_data:bool):
         except Exception as e:
             print(e)
             return
-    elif sample_data and (not sample_name_f in list_parq_files):
+    if sample_data and (not sample_name_f in list_parq_files):
         complete_df = read_parquet(complete_name_f, engine=P_ENGINE)
         sample_df = get_random_sample_data(complete_df, SAMPLE_SIZE)
         del complete_df
