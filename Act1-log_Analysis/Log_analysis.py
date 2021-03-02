@@ -14,32 +14,32 @@ def get_random_sample_data(data:DataFrame, test_ratio:float=0.1):
     return data.iloc[test_indices]
 
 
-def log_to_parquet(path_file: str, file_cols=list):
+def log_to_parquet(path_file: str, file_cols:list, parquet_engine:str="fastparquet"):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
     file_name = path_file.split('.log')[0]+'.parquet'
     df = read_csv(path_file, sep="\t", header=None,
                     names=file_cols, low_memory=False)
-    df.to_parquet(file_name, index=False)
+    df.to_parquet(file_name, index=False, engine=parquet_engine)
     return file_name
         
 
 #---------------------------------------------------------------------------------------------
 
 def conn_analysis():
-    # log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
-    #                     "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
-
-    # parquet_file = log_to_parquet(path_file="conn.log",file_cols=log_col_names)
-    # complete_df = read_parquet(parquet_file)
+    log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
+                        "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
+    PARQUET_ENGINE = "fastparquet"
+    parquet_file = log_to_parquet(path_file="conn.log",file_cols=log_col_names)
+    complete_df = read_parquet(parquet_file, engine=PARQUET_ENGINE)
 
     # complete_df = read_parquet("conn.parquet")
-    # sample_df = get_random_sample_data(complete_df)
+    sample_df = get_random_sample_data(complete_df)
 
-    # sample_df.to_parquet("conn_sample.parquet",index=False)
+    sample_df.to_parquet("conn_sample.parquet",index=False, engine=PARQUET_ENGINE)
     
-    # df = sample_df
+    df = sample_df
 
-    df = read_parquet("conn_sample.parquet")
+    # df = read_parquet("conn_sample.parquet")
 
     df["ts"] = df["ts"].astype("float")
     df["ts"] = list(map(lambda date: dt.fromtimestamp(date), df["ts"].tolist()))
