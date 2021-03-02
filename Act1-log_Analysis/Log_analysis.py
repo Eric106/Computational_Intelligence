@@ -32,13 +32,12 @@ def conn_analysis():
     PARQUET_ENGINE = "fastparquet"
     parquet_file = log_to_parquet(path_file="conn.log",file_cols=log_col_names)
     complete_df = read_parquet(parquet_file, engine=PARQUET_ENGINE)
-
-    # complete_df = read_parquet("conn.parquet")
     sample_df = get_random_sample_data(complete_df)
     del complete_df
     sample_df.to_parquet("conn_sample.parquet",index=False, engine=PARQUET_ENGINE)
-    
     df = sample_df
+    
+    # complete_df = read_parquet("conn.parquet")
 
     # df = read_parquet("conn_sample.parquet")
 
