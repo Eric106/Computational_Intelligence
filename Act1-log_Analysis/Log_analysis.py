@@ -20,6 +20,7 @@ def log_to_parquet(path_file: str, file_cols:list, parquet_engine:str="fastparqu
     df = read_csv(path_file, sep="\t", header=None,
                     names=file_cols, low_memory=False)
     df.to_parquet(file_name, index=False, engine=parquet_engine)
+    del df
     return file_name
         
 
@@ -34,7 +35,7 @@ def conn_analysis():
 
     # complete_df = read_parquet("conn.parquet")
     sample_df = get_random_sample_data(complete_df)
-
+    del complete_df
     sample_df.to_parquet("conn_sample.parquet",index=False, engine=PARQUET_ENGINE)
     
     df = sample_df
