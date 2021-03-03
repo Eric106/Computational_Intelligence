@@ -1,5 +1,4 @@
 pandas
 pyarrow
 snappy
-pprint
 numpy

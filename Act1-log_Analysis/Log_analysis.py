@@ -1,9 +1,9 @@
 from pandas import DataFrame, read_parquet, read_csv
 from datetime import datetime as dt
+import numpy as np
 from pprint import pprint
 from time import time
 from os import listdir
-import numpy as np
 import sys
 
 
@@ -92,8 +92,8 @@ def conn_analysis(log_file:str, sample_data:bool):
 def main():
     intiTime = time()
 
-    conn_analysis(log_file="conn.log", sample_data=False)
-    # conn_analysis(log_file="conn.log", sample_data=True)
+    # conn_analysis(log_file="conn.log", sample_data=False)
+    conn_analysis(log_file="conn.log", sample_data=True)
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
