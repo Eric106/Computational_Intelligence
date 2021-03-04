@@ -25,7 +25,8 @@ def log_to_parquet(in_file: str, out_file:str,file_cols: list, parquet_engine: s
     df.to_parquet(out_file, index=False, engine=parquet_engine)
     del df
 
-def get_files_inFolder(folder:str, fileType:str):
+
+def get_files_inFolder(folder: str, fileType: str):
     return list(filter(lambda fileName: fileName[-len(fileType):] == fileType, listdir(folder)))
 #---------------------------------------------------------------------------------------------
 
