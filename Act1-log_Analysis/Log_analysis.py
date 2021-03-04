@@ -5,7 +5,8 @@ from pprint import pprint
 from time import time
 from os import listdir
 import sys
-
+from warnings import simplefilter
+simplefilter(action="ignore")
 
 def get_random_sample_data(data: DataFrame, test_ratio: float):
     ''' permutation: Randomly permute a sequence or return a permuted range (ndarray).
@@ -68,8 +69,7 @@ def conn_analysis(log_file:str, sample_data:bool):
     important_cols = ["ts", "id_orig_h", "id_resp_p", "duration"]
 
     df_not_web_port = df[(df["id_resp_p"] != 80) &
-                         (df["id_resp_p"] != 8080)].copy()
-    df_not_web_port.reset_index(drop=True, inplace=True)
+                         (df["id_resp_p"] != 8080)]
 
     print('\n', "Not http ports: ")
     pprint(df_not_web_port[important_cols])
@@ -82,9 +82,8 @@ def conn_analysis(log_file:str, sample_data:bool):
     print('\n', "Not http ports groupby: ")
     pprint(df_gp_not_web_port)
 
-    df_long_conn = df[df["duration"] > 5].copy()
+    df_long_conn = df[df["duration"] > 5]
     df_long_conn.sort_values(by="duration", ascending=False, inplace=True)
-    df_long_conn.reset_index(drop=True, inplace=True)
     print('\n', "Long duration connections: ")
     pprint(df_long_conn[important_cols])
 
