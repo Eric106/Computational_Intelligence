@@ -18,7 +18,7 @@ def get_random_sample_data(data: DataFrame, test_ratio: float):
     return data.iloc[test_indices]
 
 
-def log_to_parquet(in_file: str, out_file:str,file_cols: list, parquet_engine: str):
+def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
     df = read_csv(in_file, sep="\t", header=None,
                   names=file_cols, low_memory=False)
@@ -30,7 +30,8 @@ def get_files_inFolder(folder: str, fileType: str):
     return list(filter(lambda fileName: fileName[-len(fileType):] == fileType, listdir(folder)))
 #---------------------------------------------------------------------------------------------
 
-def conn_analysis(log_file:str, sample_data:bool):
+
+def conn_analysis(log_file: str, sample_data: bool):
 
     list_log_files = get_files_inFolder("./","log")
     list_parq_files = get_files_inFolder("./","parq")
@@ -100,5 +101,6 @@ def main():
         "m" if elapsedTime >= 60 else str(elapsedTime)+"s"
     print("\nTiempo del proceso --->", elapsedTime)
     sys.exit()
+
 
 main()
