@@ -83,7 +83,7 @@ def conn_analysis(log_file:str, sample_data:bool):
     print('\n', "Not http ports groupby: ")
     pprint(df_gp_not_web_port)
 
-    df_long_conn = df[df["duration"] > 5]
+    df_long_conn = df_not_web_port[df_not_web_port["duration"] > 5]
     df_long_conn.sort_values(by="duration", ascending=False, inplace=True)
     print('\n', "Long duration connections: ")
     pprint(df_long_conn[important_cols])
