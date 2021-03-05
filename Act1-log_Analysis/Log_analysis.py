@@ -5,8 +5,6 @@ from pprint import pprint
 from time import time
 from os import listdir
 import sys
-from warnings import simplefilter
-simplefilter(action="ignore")
 
 def get_random_sample_data(data: DataFrame, test_ratio: float):
     ''' permutation: Randomly permute a sequence or return a permuted range (ndarray).
@@ -27,7 +25,9 @@ def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine:
 
 
 def get_files_inFolder(folder: str, fileType: str):
-    return list(filter(lambda fileName: fileName[-len(fileType):] == fileType, listdir(folder)))
+    return list(filter(lambda fileName: 
+                            fileName[-len(fileType):] == fileType,
+                        listdir(folder)))
 #---------------------------------------------------------------------------------------------
 
 
@@ -62,10 +62,14 @@ def conn_analysis(log_file: str, sample_data: bool):
     df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
 
     df["ts"] = df["ts"].astype("float")
-    df["ts"] = list(map(lambda date: dt.fromtimestamp(date),
-                        df["ts"].tolist()))
-    df["duration"] = list(map(lambda dur: float(dur) if not "-" in dur else 0.0,
-                            df["duration"].tolist()))
+    df["ts"] = list(map(
+                    lambda date: 
+                        dt.fromtimestamp(date),
+                    df["ts"].tolist()))
+    df["duration"] = list(map(
+                        lambda dur: 
+                            float(dur) if not "-" in dur else 0.0,
+                        df["duration"].tolist()))
     print(df.info())
 
     important_cols = ["ts", "id_orig_h", "id_resp_p", "duration"]
@@ -85,7 +89,7 @@ def conn_analysis(log_file: str, sample_data: bool):
     pprint(df_gp_not_web_port)
 
     df_long_conn = df_not_web_port[df_not_web_port["duration"] > 5]
-    df_long_conn.sort_values(by="duration", ascending=False, inplace=True)
+    df_long_conn = df_long_conn.sort_values(by="duration", ascending=False)
     print('\n', "Long duration connections: ")
     pprint(df_long_conn[important_cols])
 
