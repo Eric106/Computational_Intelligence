@@ -61,10 +61,9 @@ def conn_analysis(log_file: str, sample_data: bool):
 
     df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
 
-    df["ts"] = df["ts"].astype("float")
     df["ts"] = list(map(
                     lambda date: 
-                        dt.fromtimestamp(date),
+                        dt.fromtimestamp(float(date)),
                     df["ts"].tolist()))
     df["duration"] = list(map(
                         lambda dur: 
@@ -72,7 +71,7 @@ def conn_analysis(log_file: str, sample_data: bool):
                         df["duration"].tolist()))
     print(df.info())
 
-    important_cols = ["ts", "id_orig_h", "id_resp_p", "duration"]
+    important_cols = ["ts","uid" ,"id_orig_h", "id_resp_p", "duration"]
 
     df_not_web_port = df[(df["id_resp_p"] != 80) &
                          (df["id_resp_p"] != 8080)]
@@ -81,14 +80,14 @@ def conn_analysis(log_file: str, sample_data: bool):
     pprint(df_not_web_port[important_cols])
 
     df_gp_not_web_port = df_not_web_port.groupby(
-        important_cols[1:3]).size().to_frame().reset_index()
+        important_cols[2:4]).size().to_frame().reset_index()
     df_gp_not_web_port.rename(columns={0: "count"}, inplace=True)
     df_gp_not_web_port.sort_values(by="count", ascending=False, inplace=True)
 
     print('\n', "Not http ports groupby: ")
     pprint(df_gp_not_web_port)
 
-    df_long_conn = df_not_web_port[df_not_web_port["duration"] > 5]
+    df_long_conn = df[df["duration"] > 5]
     df_long_conn = df_long_conn.sort_values(by="duration", ascending=False)
     print('\n', "Long duration connections: ")
     pprint(df_long_conn[important_cols])
