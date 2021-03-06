@@ -1,4 +1,5 @@
 from pandas import DataFrame, read_parquet, read_csv
+import matplotlib.pyplot as plt
 from datetime import datetime as dt
 import numpy as np
 from pprint import pprint
@@ -29,7 +30,26 @@ def get_files_inFolder(folder: str, fileType: str):
                             fileName[-len(fileType):] == fileType,
                         listdir(folder)))
 #---------------------------------------------------------------------------------------------
+def get_date_sig_data(list_datetimes:list):
+    datetime_format = ["year","month","day","hour","minute","second","microsecond"]
+    dict_sig_data = {value_d:{"unique":set()} for value_d in datetime_format}
+    sig_value_index = None
+    for date in list_datetimes:
+        for value_d in datetime_format:
+            dict_sig_data[value_d]["unique"].add(getattr(date,value_d))
+            if sig_value_index != None:
+                break
+            elif len(dict_sig_data[value_d]["unique"]) >=4:
+                sig_value_index = datetime_format.index(value_d)
+    sig_values = datetime_format[sig_value_index-1:sig_value_index+1]
+    return tuple(sig_values)
 
+def plot(x,y,title,xlabel,ylabel):
+    plt.bar(x,y)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.show()
 
 def conn_analysis(log_file: str, sample_data: bool):
 
@@ -59,38 +79,59 @@ def conn_analysis(log_file: str, sample_data: bool):
         sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
         del sample_df
 
-    df = read_parquet(sample_name_f) if sample_data else read_parquet(complete_name_f)
+    important_cols = ["ts","id_orig_h", "id_resp_p", "duration"]
+    to_read_file = sample_name_f if sample_data else complete_name_f
+    df = read_parquet(to_read_file, columns=important_cols)
 
+    df = df[important_cols]
     df["ts"] = list(map(
-                    lambda date: 
-                        dt.fromtimestamp(float(date)),
-                    df["ts"].tolist()))
+        lambda date: 
+            dt.fromtimestamp(float(date)),
+        df["ts"].tolist()))
     df["duration"] = list(map(
-                        lambda dur: 
-                            float(dur) if not "-" in dur else 0.0,
-                        df["duration"].tolist()))
+        lambda dur: 
+            float(dur) if not "-" in dur else 0.0,
+        df["duration"].tolist()))
     print(df.info())
-
-    important_cols = ["ts","uid" ,"id_orig_h", "id_resp_p", "duration"]
 
     df_not_web_port = df[(df["id_resp_p"] != 80) &
                          (df["id_resp_p"] != 8080)]
 
     print('\n', "Not http ports: ")
-    pprint(df_not_web_port[important_cols])
+    pprint(df_not_web_port)
 
     df_gp_not_web_port = df_not_web_port.groupby(
-        important_cols[2:4]).size().to_frame().reset_index()
+        important_cols[1:3]).size().to_frame().reset_index()
     df_gp_not_web_port.rename(columns={0: "count"}, inplace=True)
     df_gp_not_web_port.sort_values(by="count", ascending=False, inplace=True)
+    
+    print('\n', "Not http ports count: ")
+    pprint(df_gp_not_web_port)
+    
+    sig_date1, sig_date2 = get_date_sig_data(df["ts"].tolist())
+    df_not_web_port.insert(len(df_not_web_port.columns),sig_date1,list(map(
+        lambda date:
+            getattr(date,sig_date1),
+        df_not_web_port["ts"].tolist()
+    )))
+    df_not_web_port.insert(len(df_not_web_port.columns),sig_date2,list(map(
+        lambda date:
+            getattr(date,sig_date2),
+        df_not_web_port["ts"].tolist()
+    )))
+    df_gp_not_web_port = df_not_web_port.groupby([sig_date1, sig_date2]).size().to_frame().reset_index()
+    df_gp_not_web_port.rename(columns={0: "count"}, inplace=True)
+    df_gp_not_web_port.sort_values(by=[sig_date1, sig_date2], inplace=True)
+    df_gp_not_web_port.reset_index(drop=True, inplace=True)
 
-    print('\n', "Not http ports groupby: ")
+    print('\n', "Not http ports groupby "+str([sig_date1, sig_date2])+": ")
     pprint(df_gp_not_web_port)
 
     df_long_conn = df[df["duration"] > 5]
     df_long_conn = df_long_conn.sort_values(by="duration", ascending=False)
+
     print('\n', "Long duration connections: ")
-    pprint(df_long_conn[important_cols])
+    pprint(df_long_conn)
 
 
 def main():
@@ -103,7 +144,6 @@ def main():
     elapsedTime = str(elapsedTime/60) + \
         "m" if elapsedTime >= 60 else str(elapsedTime)+"s"
     print("\nTiempo del proceso --->", elapsedTime)
-    sys.exit()
 
 
 main()
