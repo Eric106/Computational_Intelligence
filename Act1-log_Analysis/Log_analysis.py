@@ -87,17 +87,16 @@ def conn_analysis(log_file: str, sample_data: bool):
     
     print('\n', "Not http ports count: ")
     pprint(df_gp_not_web_port)
- #---------------------------------------------------------------------------------------------   
     df_not_web_port['id_orig_h'].resample('H').count().plot()
     plt.show()
 #---------------------------------------------------------------------------------------------
     df_long_conn = df[df["duration"] > 5]
     df_long_conn.set_index("ts",inplace=True)
     df_long_conn = df_long_conn.sort_index()
+    df_long_conn['duration'].resample('H').mean().plot()
+    df_long_conn.sort_values(by="duration", ascending=False, inplace=True)
     print('\n', "Long duration connections: ")
     pprint(df_long_conn)
-#---------------------------------------------------------------------------------------------
-    df_long_conn['duration'].resample('H').mean().plot()
     plt.show()
 
 def main():
