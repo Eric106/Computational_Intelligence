@@ -11,3 +11,5 @@ Or
 
 <br>Run:
 > python Log_analysis.py
+
+Or execute ***Log_analysis.ipynb*** Jupyter notebook

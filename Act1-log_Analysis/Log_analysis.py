@@ -57,7 +57,7 @@ def conn_analysis(log_file: str, sample_data: bool):
         sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
         del sample_df
 
-    important_cols = ["ts","uid","id_orig_h", "id_resp_p", "duration"]
+    important_cols = ["ts","id_orig_h", "id_resp_p", "duration"]
     to_read_file = sample_name_f if sample_data else complete_name_f
     print("\nReading -->",to_read_file,", SampleData:",sample_data,"\n")
     df = read_parquet(to_read_file, columns=important_cols)
@@ -88,7 +88,7 @@ def conn_analysis(log_file: str, sample_data: bool):
     print('\n', "Not http ports count: ")
     pprint(df_gp_not_web_port)
  #---------------------------------------------------------------------------------------------   
-    df_not_web_port['uid'].resample('H').count().plot()
+    df_not_web_port['id_orig_h'].resample('H').count().plot()
     plt.show()
 #---------------------------------------------------------------------------------------------
     df_long_conn = df[df["duration"] > 5]
