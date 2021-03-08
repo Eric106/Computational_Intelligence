@@ -30,14 +30,6 @@ def get_files_inFolder(folder: str, fileType: str):
                             fileName[-len(fileType):] == fileType,
                         listdir(folder)))
 #---------------------------------------------------------------------------------------------
-
-def plot(x,y,title,xlabel,ylabel):
-    plt.bar(x,y)
-    plt.title(title)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.show()
-
 def conn_analysis(log_file: str, sample_data: bool):
     list_log_files = get_files_inFolder("./","log")
     list_parq_files = get_files_inFolder("./","parq")
@@ -46,7 +38,7 @@ def conn_analysis(log_file: str, sample_data: bool):
     P_ENGINE = "pyarrow"
     SAMPLE_SIZE = 0.10
     df = None
-    if not (complete_name_f in list_parq_files):
+    if not complete_name_f in list_parq_files:
         if not log_file in list_log_files:
             print("ERROR fileNotFound: "+log_file)
             return 
@@ -65,7 +57,7 @@ def conn_analysis(log_file: str, sample_data: bool):
         sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
         del sample_df
 
-    important_cols = ["ts","id_orig_h", "id_resp_p", "duration"]
+    important_cols = ["ts","uid","id_orig_h", "id_resp_p", "duration"]
     to_read_file = sample_name_f if sample_data else complete_name_f
     print("\nReading -->",to_read_file,", SampleData:",sample_data,"\n")
     df = read_parquet(to_read_file, columns=important_cols)
@@ -77,13 +69,14 @@ def conn_analysis(log_file: str, sample_data: bool):
         df["ts"].tolist()))
     df["duration"] = list(map(
         lambda dur: 
-            float(dur) if not "-" in dur else 0.0,
+            float(dur) if not '-' in dur else 0.0,
         df["duration"].tolist()))
     print(df.info())
 #---------------------------------------------------------------------------------------------
     df_not_web_port = df[(df["id_resp_p"] != 80) &
                          (df["id_resp_p"] != 8080)]
-
+    df_not_web_port.set_index("ts",inplace=True)
+    df_not_web_port = df_not_web_port.sort_index()
     print('\n', "Not http ports: ")
     pprint(df_not_web_port)
 #---------------------------------------------------------------------------------------------
@@ -95,31 +88,17 @@ def conn_analysis(log_file: str, sample_data: bool):
     print('\n', "Not http ports count: ")
     pprint(df_gp_not_web_port)
  #---------------------------------------------------------------------------------------------   
-    sig_date1, sig_date2 = "hour", "minute" #datetime object attr
-    df_not_web_port.insert(len(df_not_web_port.columns),sig_date1,list(map(
-        lambda date:
-            getattr(date,sig_date1),
-        df_not_web_port["ts"].tolist()
-    )))
-    df_not_web_port.insert(len(df_not_web_port.columns),sig_date2,list(map(
-        lambda date:
-            getattr(date,sig_date2),
-        df_not_web_port["ts"].tolist()
-    )))
-    df_gp_not_web_port = df_not_web_port.groupby([sig_date1, sig_date2]).size().to_frame().reset_index()
-    df_gp_not_web_port.rename(columns={0: "count"}, inplace=True)
-    df_gp_not_web_port.sort_values(by=[sig_date1, sig_date2], inplace=True)
-    df_gp_not_web_port.reset_index(drop=True, inplace=True)
-
-    print('\n', "Not http ports groupby "+str([sig_date1, sig_date2])+": ")
-    pprint(df_gp_not_web_port)
+    df_not_web_port['uid'].resample('H').count().plot()
+    plt.show()
 #---------------------------------------------------------------------------------------------
     df_long_conn = df[df["duration"] > 5]
-    df_long_conn = df_long_conn.sort_values(by="duration", ascending=False)
-
+    df_long_conn.set_index("ts",inplace=True)
+    df_long_conn = df_long_conn.sort_index()
     print('\n', "Long duration connections: ")
     pprint(df_long_conn)
-
+#---------------------------------------------------------------------------------------------
+    df_long_conn['duration'].resample('H').mean().plot()
+    plt.show()
 
 def main():
     intiTime = time()
