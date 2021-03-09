@@ -19,7 +19,7 @@ def get_files_inFolder(folder: str, fileType: str):
     return list(filter(lambda fileName: 
                             fileName[-len(fileType):] == fileType,
                         listdir(folder)))
-                        
+
 #---------------------------------------------------------------------------------------------
 def conn_analysis(log_file: str, sample_data: bool):
     list_log_files = get_files_inFolder("./","log")
