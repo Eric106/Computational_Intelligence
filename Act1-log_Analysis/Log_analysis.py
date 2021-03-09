@@ -7,16 +7,6 @@ from time import time
 from os import listdir
 import sys
 
-def get_random_sample_data(data: DataFrame, test_ratio: float):
-    ''' permutation: Randomly permute a sequence or return a permuted range (ndarray).
-                    If x is a multi-dimensional array, it is only shuffled along its first index.'''
-    shuffled_indices = np.random.permutation(len(data))
-    test_set_size = int(len(data) * test_ratio)
-    # return the “x-first” values
-    test_indices = shuffled_indices[:test_set_size]
-    return data.iloc[test_indices]
-
-
 def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
     df = read_csv(in_file, sep="\t", header=None,
@@ -29,6 +19,7 @@ def get_files_inFolder(folder: str, fileType: str):
     return list(filter(lambda fileName: 
                             fileName[-len(fileType):] == fileType,
                         listdir(folder)))
+                        
 #---------------------------------------------------------------------------------------------
 def conn_analysis(log_file: str, sample_data: bool):
     list_log_files = get_files_inFolder("./","log")
@@ -52,7 +43,8 @@ def conn_analysis(log_file: str, sample_data: bool):
             return
     if sample_data and (not sample_name_f in list_parq_files):
         complete_df = read_parquet(complete_name_f, engine=P_ENGINE)
-        sample_df = get_random_sample_data(complete_df, SAMPLE_SIZE)
+        # sample_df = get_random_sample_data(complete_df, SAMPLE_SIZE)
+        sample_df = complete_df.sample(frac=SAMPLE_SIZE)
         del complete_df
         sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
         del sample_df
