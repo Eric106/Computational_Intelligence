@@ -21,7 +21,7 @@ def get_files_inFolder(folder: str, fileType: str):
                         listdir(folder)))
 
 #---------------------------------------------------------------------------------------------
-def conn_analysis(log_file: str, sample_data: bool):
+def log_analysis(log_file: str, sample_data: bool, table:str):
     list_log_files = get_files_inFolder("./","log")
     list_parq_files = get_files_inFolder("./","parq")
     complete_name_f = log_file.split('.log')[0]+'.parq'
@@ -34,10 +34,18 @@ def conn_analysis(log_file: str, sample_data: bool):
             print("ERROR fileNotFound: "+log_file)
             return 
         try:
-            log_col_names = ["ts", "uid", "id_orig_h", "id_orig_p", "id_resp_h", "id_resp_p", "proto", "service", "duration", "orig_bytes", "resp_bytes",
-                            "conn_state", "local_orig", "missed_bytes", "history", "orig_pkts", "orig_ip_bytes", "resp_pkts", "resp_ip_bytes", "tunnel_parents"]
+            log_col_names = {"conn":['ts', 'uid', 'id_orig_h', 'id_orig_p', 'id_resp_h', 'id_resp_p',
+                                     'proto', 'service', 'duration', 'orig_bytes', 'resp_bytes',
+                                     'conn_state', 'local_orig', 'missed_bytes', 'history', 'orig_pkts',
+                                     'orig_ip_bytes', 'resp_pkts', 'resp_ip_bytes', 'tunnel_parents'],
+                            "http":['ts', 'uid', 'id_orig_h', 'id_orig_p', 'id_resp_h', 'id_resp_p',
+                                    'trans_depth', 'method', 'host', 'uri', 'referrer', 'user_agent',
+                                    'request_body_len', 'response_body_len', 'status_code', 'status_msg',
+                                    'info_code', 'info_msg', 'filename', 'tags', 'username',
+                                    'password', 'proxied', 'orig_fuids', 'orig_mime_types', 'resp_fuids',
+                                    'resp_mime_types']}
             log_to_parquet(in_file=log_file, out_file=complete_name_f,
-                            file_cols=log_col_names, parquet_engine=P_ENGINE)
+                            file_cols=log_col_names[table], parquet_engine=P_ENGINE)
         except Exception as e:
             print(e)
             return
@@ -49,53 +57,60 @@ def conn_analysis(log_file: str, sample_data: bool):
         sample_df.to_parquet(sample_name_f, index=False, engine=P_ENGINE)
         del sample_df
 
-    important_cols = ["ts","id_orig_h", "id_resp_p", "duration"]
     to_read_file = sample_name_f if sample_data else complete_name_f
+    important_cols = {"conn":["ts","id_orig_h", "id_resp_p"],
+                    "http":["ts","id_orig_h", "id_resp_p", "resp_mime_types"]}
+    print("*"*70)                    
     print("\nReading -->",to_read_file,", SampleData:",sample_data,"\n")
-    df = read_parquet(to_read_file, columns=important_cols)
-
-    df = df[important_cols]
+    df = read_parquet(to_read_file, columns=important_cols[table])
     df["ts"] = list(map(
         lambda date: 
             dt.fromtimestamp(float(date)),
         df["ts"].tolist()))
-    df["duration"] = list(map(
-        lambda dur: 
-            float(dur) if not '-' in dur else 0.0,
-        df["duration"].tolist()))
     print(df.info())
-#---------------------------------------------------------------------------------------------
-    df_not_web_port = df[(df["id_resp_p"] != 80) &
-                         (df["id_resp_p"] != 8080)]
-    df_not_web_port.set_index("ts",inplace=True)
-    df_not_web_port = df_not_web_port.sort_index()
-    print('\n', "Not http ports: ")
-    pprint(df_not_web_port)
-#---------------------------------------------------------------------------------------------
-    df_gp_not_web_port = df_not_web_port.groupby(
-        important_cols[1:3]).size().to_frame().reset_index()
-    df_gp_not_web_port.rename(columns={0: "count"}, inplace=True)
-    df_gp_not_web_port.sort_values(by="count", ascending=False, inplace=True)
-    
-    print('\n', "Not http ports count: ")
-    pprint(df_gp_not_web_port)
-    df_not_web_port['id_orig_h'].resample('H').count().plot()
-    plt.show()
-#---------------------------------------------------------------------------------------------
-    df_long_conn = df[df["duration"] > 5]
-    df_long_conn.set_index("ts",inplace=True)
-    df_long_conn = df_long_conn.sort_index()
-    df_long_conn['duration'].resample('H').mean().plot()
-    df_long_conn.sort_values(by="duration", ascending=False, inplace=True)
-    print('\n', "Long duration connections: ")
-    pprint(df_long_conn)
-    plt.show()
+
+    if table == "conn":
+        df_gp_not_web_port = df[(df["id_resp_p"] != 80)].groupby(
+            important_cols[table][1:3]).size().to_frame()
+        df_gp_not_web_port.rename(columns={0: "count"}, inplace=True)
+        df_gp_not_web_port.sort_values(by="count", ascending=False, inplace=True)
+        print('\n', "different ports to 80: ")
+        pprint(df_gp_not_web_port)
+
+    elif table == "http":
+        df_not_http = df[~df["id_resp_p"].isin([80,8080])]
+        df_not_http.set_index("ts",inplace=True)
+        df_not_http = df_not_http.sort_index()
+        df_not_http["id_orig_h"].resample('Q').count().plot()
+        print('\n', "Different ports to 80 and 8080: ")
+        pprint(df_not_http)
+        plt.show()
+
+        executable_types = ['application/x-dosexec', 'application/octet-stream',
+                            'binary', 'application/vnd.ms-cab-compressed']
+        exploit_types = ['application/x-java-applet', 'application/pdf',
+                         'application/zip', 'application/jar', 'application/x-shockwave-flash']
+        df_exec_exploit = df[df["resp_mime_types"].isin(executable_types+exploit_types)]
+        df_exec_exploit.set_index("ts",inplace=True)
+        df_exec_exploit = df_exec_exploit.sort_index()
+        df_exec_exploit["id_orig_h"].resample('Q').count().plot()
+        print('\n', "Exploit Types:",exploit_types)
+        print("Executable Types:",executable_types)
+        pprint(df_exec_exploit)
+        plt.show()
 
 def main():
+    paths = {
+        "conn":"conn.log",
+        "http":"http.log"
+    }
+
     intiTime = time()
 
-    # conn_analysis(log_file="conn.log", sample_data=False)
-    conn_analysis(log_file="conn.log", sample_data=True)
+    # log_analysis(log_file="conn.log", sample_data=False)
+    log_analysis(log_file=paths["conn"], sample_data=True, table="conn")
+
+    log_analysis(log_file=paths["http"],sample_data=False, table="http")
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
