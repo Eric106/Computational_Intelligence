@@ -1,16 +1,33 @@
-## ACT 1 - Log Analysis
+# ACT 1 - Log Analysis
 
-After cloning this repo, dowload the files ***conn.log*** and ***http.log*** in the same folder of ***Log_analysis.py***<br>
-***conn.log*** --> https://experiencia21.tec.mx/courses/112876/files/42291245/download?download_frd=1<br>
-***http.log*** --> https://experiencia21.tec.mx/courses/112876/files/43820536/download?download_frd=1<br>
+## Considerations
 
-First make sure that the requirements are correctly installed:
-> conda install -c defaults -c conda-forge --file requirements.txt
+After cloning this repo, dowload the files [conn.log](https://experiencia21.tec.mx/courses/112876/files/42291245/download?download_frd=1) and [http.log](https://experiencia21.tec.mx/courses/112876/files/43820536/download?download_frd=1) in the same folder of `Log_analysis.py`.
 
-Or
-> pip install -r requirements.txt
+## Execution
 
-<br>Run:
-> python Log_analysis.py
+First make sure that the requirements are correctly installed. The dependencies can be installed via: 
 
-Or execute ***Log_analysis.ipynb*** Jupyter notebook
+`Anaconda`
+
+```shell
+~$ conda install -c defaults -c conda-forge --file requirements.txt
+```
+
+`pip`
+
+```shell
+~$ pip install -r requirements.txt
+```
+
+After getting the requirements run the below command to watch the data
+analysis.
+
+```shell
+~$ python Log_analysis.py
+```
+
+If you prefer you can also execute the proyect with this: 
+`Log_analysis.ipynb` Jupyter notebook.
+
+
