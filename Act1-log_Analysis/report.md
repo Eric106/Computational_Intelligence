@@ -171,6 +171,18 @@ ts
 
 Tomando de referencia la impresión anterior uno de los tipos de aplicaciones es ejecutable utilizando el puerto 19910, des lo cuales no se tiene asignado ningún tipo de detalle. Posiblemente, alguno de los dos gusanos informaticos anteriormente mencionados ejecutaron aplicaciones ejecutable en `Windows` mediante el puerto 19910. 
 
+Por otra parte, se puede también hacer un análisis de la información gráficada.
+
+![alt text](./images/no80_8080.png)
+
+Por ejemplo, en esta primera gráfica se muestra la cantidad de veces que se ingreso mediante una IP y puerto de origen. A simple vista podemos notar que los datos cambian de acuerdo al año y trimestre. Durante 2012 y 2013 los datos demuestra que hubo gran actividad en cuanto a conexiones, aunque fue segundo trimestre en 2012, último trimestre del 2012, y principio del 2013 en el primer trimestre donde hubo una gran cantidad de entradas. Marcando el primer trimestre del 2013 como el más alto en registros.
+
+![alt text](./images/exploits_types.png)
+
+Esta gráfica al igual que la anterior representa el número de tipos de ataque y explotaciones comúnes que se registraron cada trimestre. Incluso resalta que durante el segundo trimestre de 2012 hubo una cantidad fuerte de registros, superando por mucho los datos recuperados en otros trimestres. 
+
+Al observar dichas gráficas podríamos reforzar la idea de que fue probable que durante ese tiempo fue cuando se exploto la vulnerabilidad del sistema al inyectar una gran cantidad de archivos ejecutable sobre los cuales pudo estar trabajando alguno tipo de gusano. 
+
 # Conclusion 
 
 Al realizar el análisis de estos dos archivos (`conn.log` y `http.log`) se logró identificar que posiblemente el sistema del cual se extranjeron dichas bitácoras pude haber sufrido una explotación al haber identificado un vulnerabilidad dentro de sus sistemas. No obstante, dicha patrón no pudo haber sido encontrado sin la correcta manipulación e interpretación de los datos. 
