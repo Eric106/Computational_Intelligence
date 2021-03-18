@@ -143,4 +143,38 @@ ts
 
 # Finds
 
+```python
+ different ports to 80: 
+                                               count
+id_orig_h                           id_resp_p       
+192.168.204.45                      443         4865
+2001:dbb:c18:202:20c:29ff:fe18:b667 445         4840
+```
+
+En la primera sección al obtener todas IPs de origin y los puertos diferentes a 80 del archivo `conn.log` podemos notar que la mayoría de los ingresos fueron mediante HTTPS (puerto 443), pero hay que nota otra dato importante que el segundo puerto mayormente consultado fue el 445. 
+
+El puerto 445 es utilizado para el protocolo `Server Message Block (SMB)`. El protocolo permite compartir información entre archivos, impresoras, entre otras sobre sistemas Wndows. Sin embargo, también es un acceso abierto a dos tipos de gusanos: `Sasser` y `Nimda`. 
+
+`Sasser` funciona escaneando un rango de direcciones IP y explotando vulnerabilidad a través del puerto 445. Su principal función es desbordamiento de buffer en un componente clave conocido como `LSASS (Local Security Authority Subsystem Service)` dentro de los sistemas `Windows`. 
+
+Por otro lado, `Nimda` tiene el propósito de extender su infección a otros ficheros de la computadora o a otros dispositivos con el mismo sistema (`Windows`) conectados a la red. 
+
+Ambos gusano pueden ser fácilmente eliminados configurando el firewall para evitar el tráfico a través del puerto 445. 
+
+```python
+Different ports to 80 and 8080: 
+                                 id_orig_h  id_resp_p        resp_mime_types
+ts                                                                      
+2014-07-14 02:25:35.649867   192.168.67.10      19910  application/x-dosexec
+2014-07-14 02:25:49.922045   192.168.67.10      19910              text/html
+```
+
+Tomando de referencia la impresión anterior uno de los tipos de aplicaciones es ejecutable utilizando el puerto 19910, des lo cuales no se tiene asignado ningún tipo de detalle. Posiblemente, alguno de los dos gusanos informaticos anteriormente mencionados ejecutaron aplicaciones ejecutable en `Windows` mediante el puerto 19910. 
+
 # Conclusion 
+
+Al realizar el análisis de estos dos archivos (`conn.log` y `http.log`) se logró identificar que posiblemente el sistema del cual se extranjeron dichas bitácoras pude haber sufrido una explotación al haber identificado un vulnerabilidad dentro de sus sistemas. No obstante, dicha patrón no pudo haber sido encontrado sin la correcta manipulación e interpretación de los datos. 
+
+Si bien es una vulnerabilidad que pude haber causado problemas importantes, herramientas como los antivirus, firewalls o protocolos para manejo de amanzas son aspectos suficientes para cesar el intento de querer explotar una sección vulnerable del sistema. 
+
+Finalmente, realizar este tipo de ejercicios periódicamente en la infraestructura de red ayudaría a monitorear amenazas latentes con estas características. Incluso, se podría automatizar la lectura de dichos `logs` y su interpretación mediante valores de entrada y acciones que requerieren un proceso fijo del cual solo dependen un par de variables.
