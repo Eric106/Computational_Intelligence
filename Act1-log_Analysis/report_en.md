@@ -20,7 +20,7 @@ Within the activities that were carried out, it was included:
 - The search for HTTP packets that did not use conventional ports (80 and 8080).
 - Gráficas seccionadas por periódos. 
 
-- Graphs sectioned by peri�s.
+- Graphs sectioned by peri�s.
 - Identificación de tipos de ejecutables y explotaciones comúnes. 
 
 - Identification of types of executables and common holdings.
@@ -33,7 +33,7 @@ This with the purpose of observing relevant information that could be helpful fo
 
 El análisis se hizo de acuerdo a los siguientes dos archivos [conn.log](https://experiencia21.tec.mx/courses/112876/files/42291245/download?download_frd=1) y [http.log](https://experiencia21.tec.mx/courses/112876/files/43820536/download?download_frd=1).
 
-The analysis was made according to the following two files [conn.log] (https://experience21.tec.mx/courses/112876/files/42291245/download?download_frd=1) and [HTTP.LOG] (https://experience21.tec.mx/courses/112876/files/43820536/download?download_frd=1).
+The analysis was made according to the following two files [conn.log](https://experience21.tec.mx/courses/112876/files/42291245/download?download_frd=1) and [HTTP.LOG](https://experience21.tec.mx/courses/112876/files/43820536/download?download_frd=1).
 
 El primer archivo (`conn.log`) es un compedio de datos con los siguientes atributos: `ts`, `uid`, `id.orig_h`, `id.orig_p`, `id.resp_h`, `id.resp_p`, `proto`, `service`, `duration`, `orig_bytes`, `resp_bytes`, `conn_state`, `local_orig`, `missed_bytes`, `history`, `orig_pkts`, `orig_ip_bytes`, `resp_pkts`, `resp_ip_bytes`, `tunnel_parents`, `threat` y `sample`.
 
@@ -256,4 +256,4 @@ Si bien es una vulnerabilidad que pude haber causado problemas importantes, herr
 While it is a vulnerability that could have caused important problems, tools such as antivirus, firewalls or amazing management protocols are sufficient aspects to cease the attempt to exploit a vulnerable system section.
 
 Finalmente, realizar este tipo de ejercicios periódicamente en la infraestructura de red ayudaría a monitorear amenazas latentes con estas características. Incluso, se podría automatizar la lectura de dichos `logs` y su interpretación mediante valores de entrada y acciones que requerieren un proceso fijo del cual solo dependen un par de variables.
-Finally, performing this type of exercises peri�dically in the network infrastructure would help monitor latent threats with these features.Even, the reading of said `Logs` and its interpretation could be automated through entry values and actions that require a fixed process from which only a pair of variables depend.
+Finally, performing this type of exercises peri�dically in the network infrastructure would help monitor latent threats with these features.Even, the reading of said `logs` and its interpretation could be automated through entry values and actions that require a fixed process from which only a pair of variables depend.
