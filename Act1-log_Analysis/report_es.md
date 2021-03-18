@@ -1,3 +1,11 @@
+## ACT 1 - Log Analysis
+### Participants 
+    Eric Gómez - A01378838
+    Felipe Osornio - A01377154
+    Rafael Moreno - A01378916
+    Uriel Pineda - A01379633
+    Hector Hernandez - A01374009
+
 # Introduction
 
 Actualmente, la cantidad de información que trasita a través del internet es amplia. Con estos grandes volumenes de datos uno de los mejores usos que se les puede dar es la identificación de patrones o anomalías en el tráfico de red aplicado en temas de seguridad. De ahí es que surje la necesidad de utilizar herramientas que nos ayuden al procesamiento de información para observar comportamientos que no se vislumbrar a simple vista. 
