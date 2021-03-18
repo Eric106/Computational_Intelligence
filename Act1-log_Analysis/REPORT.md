@@ -27,7 +27,7 @@ The analysis was made according to the following two files [conn.log](https://ex
 
 The first file (`conn.log`) is data collection with the following attributes: `ts`, `uid`, `id.orig_h`, `id.orig_p`, `id.resp_h`, `id.resp_p`, `proto`, `service`, `duration`, `orig_bytes`, `resp_bytes`, `conn_state`, `local_orig`, `missed_bytes`, `history`, `orig_pkts`, `orig_ip_bytes`, `resp_pkts`, `resp_ip_bytes`, `tunnel_parents`, `threat` and `sample`.
 
-As this file contained around 22.6 million inputs, it is limited to only take a sample of 10%, which would be equivalent to 2.2 million tickets to analyze. Likewise, the files were transformed to the binary parquet format. Decreasing the execution time and use in memory.
+As this file contained around 22.6 million inputs, it is limited to only take a sample of 10%, which would be equivalent to 2.2 million registers to analyze. Likewise, the files were transformed to the binary parquet format. Decreasing the execution time and use in memory.
 
 In the next code you can observe different aspects that describe the way in which the data set is manipulated:
 
