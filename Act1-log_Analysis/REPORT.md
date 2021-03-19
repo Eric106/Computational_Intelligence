@@ -108,7 +108,7 @@ ts
 ```
 The following graph exemplifies how the data of the previous printing was sectioned.
 
-![alt text](./images/no80_8080.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act1-log_Analysis/images/no80_8080.png?raw=true)
 
 Finally, the data were segmented according to the following impression to generate a graph showing each quarter count of the connections that matches with the common executables and exploits.
 
@@ -144,7 +144,7 @@ ts
 2014-07-14 08:44:11.976348      application/x-dosexec 
 ```
 
-![alt text](./images/exploits_types.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act1-log_Analysis/images/exploits_types.png?raw=true)
 
 ---
 ## Finds
@@ -175,16 +175,16 @@ ts
 2014-07-14 02:25:49.922045   192.168.67.10      19910              text/html
 ```
 
-Taking reference the previous impression one of the types of applications is using the port 19910, what is not assigned any detail type. Possibly, the aforementioned computer worms executed applications in `Windows` through the port 19910.
+Taking reference the previous impression one of the types of applications using the port 19910, what is not assigned any detail type. Possibly, the aforementioned computer worms executed applications in `Windows` through the port 19910.
 
 On the other hand, an analysis of the graphic information can also be done.
 
-![alt text](./images/no80_8080.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act1-log_Analysis/images/no80_8080.png?raw=true)
 > Fig.1 Connections to other ports than 80 and 8080
 
 For example, in this first graph (Fig.1) the amount of times is shown by an IP and source port. At first glance we can see that the data changes according to the year and quarter. During 2012 and 2013 the data shows that there was great activity in terms of connections, there are three big peaks, the second and last quarters of 2012 and the third of 2013.
 
-![alt text](./images/exploits_types.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act1-log_Analysis/images/exploits_types.png?raw=true)
 > Fig.2 Connections with common executable and exploit types
 
 This graphic (Fig.2) as well as the above represents the number of attack types and common exploits that were recorded each trimester. It even emphasizes that during the second quarter of 2012 there was a strong number of records, far exceeding the data recovered in other quarters.
