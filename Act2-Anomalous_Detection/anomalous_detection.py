@@ -1,6 +1,6 @@
 from time import time
 from os import listdir
-from pandas import read_parquet, read_csv
+from pandas import read_parquet, read_csv, DataFrame
 from datetime import datetime as dt
 
 def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
@@ -16,6 +16,9 @@ def get_files_inFolder(folder: str, fileType: str):
                             fileName[-len(fileType):] == fileType,
                         listdir(folder)))
 
+def slice_dataFrame(dataFrame: DataFrame, percent_slice: float):
+    total_data
+
 
 def an_detect(http_log_name: str):
     P_ENGINE = "pyarrow"
@@ -30,7 +33,8 @@ def an_detect(http_log_name: str):
     if not http_parq_name in list_parq_files:
         log_to_parquet(http_log_name, http_parq_name, cols_log, P_ENGINE)
     
-    df = read_parquet(http_parq_name)
+    important_cols = ["ts","id_orig_h", "id_resp_p","response_body_len"]
+    df = read_parquet(http_parq_name, columns=important_cols)
     df["ts"] = list(map(
                     lambda date: 
                         dt.fromtimestamp(float(date)),
@@ -46,9 +50,7 @@ def main():
 
     intiTime = time()
 
-    # log_analysis(log_file="conn.log", sample_data=False)
     an_detect(http_log_name=paths["http"])
-
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
