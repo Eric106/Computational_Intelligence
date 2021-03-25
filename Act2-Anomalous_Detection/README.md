@@ -1,8 +1,8 @@
-# ACT 1 - Log Analysis
+# ACT 1 -  Anomalous Detection
 
 ## Considerations
 
-After cloning this repo, dowload the file [http.log](vhttps://experiencia21.tec.mx/courses/112876/files/44700556/download?download_frd=1) in the same folder of `anomalous_detection.py`.
+After cloning this repo, dowload the file [http.log](https://experiencia21.tec.mx/courses/112876/files/44700556/download?download_frd=1) in the same folder of `anomalous_detection.py`.
 
 ## Execution
 
