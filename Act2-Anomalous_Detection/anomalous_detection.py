@@ -3,6 +3,7 @@ from os import listdir
 from pandas import read_parquet, read_csv, DataFrame
 from datetime import datetime as dt
 
+
 def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
     df = read_csv(in_file, sep="\t", header=None,
@@ -16,8 +17,10 @@ def get_files_inFolder(folder: str, fileType: str):
                             fileName[-len(fileType):] == fileType,
                         listdir(folder)))
 
-def slice_dataFrame(dataFrame: DataFrame, percent_slice: float):
-    total_data
+
+def slice_dataFrame(df: DataFrame, slice_size: float):
+    idx_cut = int((df.shape[0])*slice_size)
+    return df.iloc[:idx_cut], df.iloc[idx_cut:]
 
 
 def an_detect(http_log_name: str):
@@ -40,8 +43,10 @@ def an_detect(http_log_name: str):
                         dt.fromtimestamp(float(date)),
                     df["ts"].tolist()))
     print(df.info())
-    print(df)
-
+    # print(df)
+    train_df, test_df = slice_dataFrame(df,0.2)
+    print(train_df)
+    print(test_df)
 
 def main():
     paths = {
