@@ -1,11 +1,13 @@
 # ACT 1 - Log Analysis
-    Eric Gómez - A01378838  
-    Felipe Osornio - A01377154  
-    Rafael Moreno - A01378916  
-    Uriel Pineda - A01379633  
-    Hector Hernandez - A01374009  
+
+Eric Gómez - A01378838
+Felipe Osornio - A01377154  
+Rafael Moreno - A01378916  
+Uriel Pineda - A01379633
+Hector Hernandez - A01374009
 
 ## Introduction
+
 Currently, the amount of information that transit through the Internet is wide. With these large data volumes one of the best uses that can be given is the identification of patterns or anomalies in the network traffic applied in safety issues. From there, it is that the need to use tools that help us from the information processing to observe behaviors that will not be glimpsed at first glance.
 
 In the subsequent work, an analysis of two different files that include information on network traffic will be made.Both files are a set of record collected by Zeek IDS, which works as a network traffic analyzer in a passive way, as well as free use.
@@ -21,6 +23,7 @@ This with the purpose of observing relevant information that could be helpful fo
 
 ---
 ## Methodology
+
 The analysis was made according to the following two files [conn.log](https://experience21.tec.mx/courses/112876/files/42291245/download?download_frd=1) and [http.log](https://experience21.tec.mx/courses/112876/files/43820536/download?download_frd=1).
 
 The first file (`conn.log`) is data collection with the following attributes: `ts`, `uid`, `id.orig_h`, `id.orig_p`, `id.resp_h`, `id.resp_p`, `proto`, `service`, `duration`, `orig_bytes`, `resp_bytes`, `conn_state`, `local_orig`, `missed_bytes`, `history`, `orig_pkts`, `orig_ip_bytes`, `resp_pkts`, `resp_ip_bytes`, `tunnel_parents`, `threat` and `sample`.
@@ -193,6 +196,7 @@ By observing these graphics, we could reinforce the idea that it was likely that
 
 ---
 ## Conclusion 
+
 Performing the analysis of these two files (`conn.log` and` http.log`) it was possible to identify that possibly the system of which such bits were extracted could have suffered an exploitation of a vulnerability. However, this patron could not have been found without the correct manipulation and interpretation of the data.
 
 While it is a vulnerability that could have caused important problems, tools such as antivirus, firewalls or amazing management protocols are sufficient aspects to cease the attempt to exploit a vulnerable system section.
