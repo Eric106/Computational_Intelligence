@@ -2,3 +2,5 @@ pandas
 pyarrow
 snappy
 numpy
+statsmodels
+seaborn

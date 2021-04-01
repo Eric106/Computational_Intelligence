@@ -107,7 +107,7 @@ def main():
 
     intiTime = time()
 
-    # log_analysis(log_file="conn.log", sample_data=False)
+    # log_analysis(log_file=paths["conn"], sample_data=False, table="conn")
     log_analysis(log_file=paths["conn"], sample_data=True, table="conn")
 
     log_analysis(log_file=paths["http"],sample_data=False, table="http")

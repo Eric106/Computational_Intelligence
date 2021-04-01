@@ -2,7 +2,7 @@ from time import time
 from os import listdir
 from pandas import read_parquet, read_csv, DataFrame
 from datetime import datetime as dt
-
+from modules import  run_arima
 
 def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
@@ -19,12 +19,13 @@ def get_files_inFolder(folder: str, fileType: str):
 
 
 def slice_dataFrame(df: DataFrame, slice_size: float):
-    idx_cut = int((df.shape[0])*slice_size)
+    idx_cut = int((df.shape[0])*(1-slice_size))
     return df.iloc[:idx_cut], df.iloc[idx_cut:]
 
 
 def an_detect(http_log_name: str):
     P_ENGINE = "pyarrow"
+    TEST_SIZE = 0.2
     cols_log = ['ts', 'uid', 'id_orig_h', 'id_orig_p', 'id_resp_h', 'id_resp_p',
                 'trans_depth', 'method', 'host', 'uri', 'referrer', 'user_agent',
                 'request_body_len', 'response_body_len', 'status_code', 'status_msg',
@@ -36,17 +37,20 @@ def an_detect(http_log_name: str):
     if not http_parq_name in list_parq_files:
         log_to_parquet(http_log_name, http_parq_name, cols_log, P_ENGINE)
     
-    important_cols = ["ts","id_orig_h", "id_resp_p","response_body_len"]
+    important_cols = ["ts","id_orig_h", "id_resp_p", "response_body_len"]
     df = read_parquet(http_parq_name, columns=important_cols)
     df["ts"] = list(map(
                     lambda date: 
                         dt.fromtimestamp(float(date)),
                     df["ts"].tolist()))
     print(df.info())
-    # print(df)
-    train_df, test_df = slice_dataFrame(df,0.2)
+
+    train_df, test_df = slice_dataFrame(df,TEST_SIZE)
     print(train_df)
     print(test_df)
+    run_arima.get_pacf_acf(train_df, "response_body_len")
+
+
 
 def main():
     paths = {
