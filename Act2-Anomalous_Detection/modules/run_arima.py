@@ -20,10 +20,21 @@ def get_arima(data: DataFrame, target_col: str, p: int, q: int):
                     ar=p, ma=q, integ=0, target=target_col)
     return model
 
-def try_models(arima_model):              
-    x = arima_model.fit("PML")
+def try_models(arima_model, type_model: str):
+    # https://pyflux.readthedocs.io/en/latest/classical.html
+    # https://pyflux.readthedocs.io/en/latest/bayes.html
+    model_types = {
+        "classical":['MLE','OLS','PML'],
+        "bayesian":['Laplace','M-H','PML']
+    }
+    for m_type in model_types[type_model]:
+        try_model(arima_model, m_type)
+    
 
-    #https://pyflux.readthedocs.io/en/latest/bayes.html
+
+def try_model(arima_model, target_model: str):
+    x = arima_model.fit(target_model)
+
     print(x.summary())
 
     print(x.scores)

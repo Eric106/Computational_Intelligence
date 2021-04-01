@@ -3,3 +3,4 @@ __pycache__/
 *.parq
 *.log
 *.bat
+*.DS_Store

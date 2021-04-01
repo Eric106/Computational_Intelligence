@@ -2,7 +2,10 @@ from time import time
 from os import listdir
 from pandas import read_parquet, read_csv, DataFrame
 from datetime import datetime as dt
-from modules import  run_arima
+from modules import run_arima as ra
+from termcolor import  colored
+
+div = colored('********************************************************************','green')
 
 def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
@@ -23,9 +26,8 @@ def slice_dataFrame(df: DataFrame, slice_size: float):
     return df.iloc[:idx_cut], df.iloc[idx_cut:]
 
 
-def an_detect(http_log_name: str):
+def an_detect(http_log_name: str, train: bool):
     P_ENGINE = "pyarrow"
-    TEST_SIZE = 0.2
     cols_log = ['ts', 'uid', 'id_orig_h', 'id_orig_p', 'id_resp_h', 'id_resp_p',
                 'trans_depth', 'method', 'host', 'uri', 'referrer', 'user_agent',
                 'request_body_len', 'response_body_len', 'status_code', 'status_msg',
@@ -43,13 +45,24 @@ def an_detect(http_log_name: str):
                     lambda date: 
                         dt.fromtimestamp(float(date)),
                     df["ts"].tolist()))
+    print(div,colored('\n '+http_log_name+' INFO','green'))
     print(df.info())
 
+    TEST_SIZE = 0.2
     train_df, test_df = slice_dataFrame(df,TEST_SIZE)
+    print(div,colored('\n train_DF','green'))
     print(train_df)
-    print(test_df)
-    run_arima.get_pacf_acf(train_df, "response_body_len")
 
+    print(div,colored('\n test_DF','green'))
+    print(test_df)
+
+    t_col = "response_body_len"
+    if train:
+        print(div,colored('\n Training...','green'))
+        ra.get_pacf_acf(train_df, t_col)
+    model = ra.get_arima(test_df, t_col, 1, 10)
+
+    
 
 
 def main():
@@ -59,7 +72,7 @@ def main():
 
     intiTime = time()
 
-    an_detect(http_log_name=paths["http"])
+    an_detect(http_log_name=paths["http"], train=true)
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \

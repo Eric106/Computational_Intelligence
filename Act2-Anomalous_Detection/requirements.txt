@@ -4,3 +4,4 @@ snappy
 numpy
 statsmodels
 seaborn
+termcolor
