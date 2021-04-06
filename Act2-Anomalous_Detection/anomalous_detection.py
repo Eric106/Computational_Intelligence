@@ -61,25 +61,26 @@ def an_detect(http_log_name: str, train: bool):
     if train:
         print(div,colored('\n Training...','green'))
         ra.get_pacf_acf(train_df, t_col)
-    else:
-        ra.set_up(test_df, 1, 15, t_col)
 
-        print(div, colored('\n Classical Inference', 'green'))
-        t_classical = ra.try_models(inference='classical', h=100, pv=40)
+    ra.set_up(test_df, 1, 15, t_col)
 
-        print(div, colored('\n Bayesian Inference', 'green'))
-        t_bayesian = ra.try_models(inference='bayesian', h=100, pv=40)
-        
-        all_exec_times = concat([t_classical, t_bayesian], ignore_index=True)
-        print(div,colored('\n Forecast exec times','green'))
-        print(all_exec_times)
-        au.plot(
-            x= all_exec_times['model_type'].tolist(),
-            y= all_exec_times['time'].tolist(),
-            title= 'Forecast exec times',
-            xlabel= 'model_type',
-            ylabel= 'time'
-        )
+    print(div, colored('\n Classical Inference', 'green'))
+    t_classical = ra.try_models(inference='classical', h=100, pv=40)
+
+    print(div, colored('\n Bayesian Inference', 'green'))
+    t_bayesian = ra.try_models(inference='bayesian', h=100, pv=40)
+    
+    all_exec_times = concat([t_classical, t_bayesian], ignore_index=True)
+    print(div,colored('\n Forecast exec times','green'))
+    print(all_exec_times)
+    au.plot(
+        x= all_exec_times['model_type'].tolist(),
+        y= all_exec_times['time'].tolist(),
+        title= 'Forecast exec times',
+        xlabel= 'model_type',
+        ylabel= 'time'
+    )
+    
 
 
 def main():

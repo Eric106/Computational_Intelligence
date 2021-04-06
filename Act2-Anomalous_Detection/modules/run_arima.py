@@ -31,41 +31,39 @@ def get_pacf_acf(data: DataFrame, target_col: str):
 def try_models(inference: str, h: int, pv: int):
     # https://pyflux.readthedocs.io/en/latest/classical.html
     # https://pyflux.readthedocs.io/en/latest/bayes.html
-    model_types = {
+    inf_types = {
         "classical":['MLE','PML'],
         "bayesian":['Laplace','M-H']
-        # "bayesian":['M-H']
-
+        # "bayesian":['Laplace','BBVI']
     }
     dict_times = {'model_type':[],'time':[], 'forecast_mean_'+TAR_COL:[]}
-    for m_type in model_types[inference]:
-        print(div2,colored('\n '+inference+': '+m_type,'magenta'))
+    for i_method in inf_types[inference]:
+        print(div2,colored('\n '+inference+': '+i_method,'magenta'))
         intiTime = time()
-        mean = try_model(m_type, h, pv)
+        mean = try_model(i_method, h, pv)
         elapsedTime = round(time()-intiTime, 2)
         elapsedTime = round(elapsedTime/60,4)
         print("\nTiempo del proceso --->", elapsedTime)
-        dict_times['model_type'].append(inference+': '+m_type)
+        dict_times['model_type'].append(inference+': '+i_method)
         dict_times['time'].append(elapsedTime)
         dict_times['forecast_mean_'+TAR_COL].append(mean)
     return DataFrame(dict_times)
 
 
-def try_model(target_model: str, h: int, pv: int):
+def try_model(target_method: str, h: int, pv: int):
     arima_model = pf.ARIMA(data=DF, ar=AR, ma=MA, integ=0, target=TAR_COL)
-
-    x = arima_model.fit(target_model)
+    x = arima_model.fit(method=target_method)
     print(x.summary())
     '''
     Use the data that you have and see that predictions fit with the values that you have in the dataset.
     h = How many steps to forecast ahead
     past_values: How many past datapoints to plot
     '''
-    # arima_model.plot_fit()
+    arima_model.plot_fit()
 
     # arima_model.plot_predict_is(h=h, past_values=pv)
 
-    # arima_model.plot_predict(h=h, past_values=pv)
+    arima_model.plot_predict(h=h, past_values=pv)
 
     fcast = arima_model.predict(h=h)
     print(fcast)
