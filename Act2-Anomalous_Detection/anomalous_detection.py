@@ -62,7 +62,7 @@ def an_detect(http_log_name: str, train: bool):
         print(div,colored('\n Training...','green'))
         ra.get_pacf_acf(train_df, t_col)
     else:
-        ra.set_up(test_df, 1, 26, t_col)
+        ra.set_up(test_df, 1, 15, t_col)
 
         print(div, colored('\n Classical Inference', 'green'))
         t_classical = ra.try_models(inference='classical', h=100, pv=40)
