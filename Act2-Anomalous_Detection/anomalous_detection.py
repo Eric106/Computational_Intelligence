@@ -62,7 +62,7 @@ def an_detect(http_log_name: str, train: bool):
         print(div,colored('\n Training...','green'))
         ra.get_pacf_acf(train_df, t_col)
 
-    ra.set_up(test_df, 1, 15, t_col)
+    ra.set_up(test_df, 1, 6, t_col)
 
     print(div, colored('\n Classical Inference', 'green'))
     t_classical = ra.try_models(inference='classical', h=100, pv=40)
@@ -78,7 +78,14 @@ def an_detect(http_log_name: str, train: bool):
         y= all_exec_times['time'].tolist(),
         title= 'Forecast exec times',
         xlabel= 'model_type',
-        ylabel= 'time'
+        ylabel= 'time_minutes'
+    )
+    au.plot(
+        x= all_exec_times['model_type'].tolist(),
+        y= all_exec_times['forecast_mean_'+t_col].tolist(),
+        title= 'Forecast mean of '+t_col,
+        xlabel= 'model_type',
+        ylabel= 'forecast_mean_'+t_col
     )
     
 
@@ -90,7 +97,8 @@ def main():
 
     intiTime = time()
 
-    an_detect(http_log_name=paths["http"], train=False)
+    an_detect(http_log_name=paths["http"], train=True)
+    # an_detect(http_log_name=paths["http"], train=False)
 
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \

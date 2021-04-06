@@ -59,11 +59,11 @@ def try_model(target_method: str, h: int, pv: int):
     h = How many steps to forecast ahead
     past_values: How many past datapoints to plot
     '''
-    arima_model.plot_fit()
+    # arima_model.plot_fit()
 
     # arima_model.plot_predict_is(h=h, past_values=pv)
 
-    arima_model.plot_predict(h=h, past_values=pv)
+    # arima_model.plot_predict(h=h, past_values=pv)
 
     fcast = arima_model.predict(h=h)
     print(fcast)
