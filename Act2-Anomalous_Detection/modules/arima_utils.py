@@ -17,6 +17,12 @@ def adfuller_test(data):
 
     print('\n')
 
+def plot(x,y,title,xlabel,ylabel):
+    plt.bar(x,y)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.show()
 
 def plot_acf(data):
     fig = plt.figure(figsize=(12, 8))

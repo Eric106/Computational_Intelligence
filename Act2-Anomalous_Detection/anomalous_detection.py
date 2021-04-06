@@ -1,11 +1,12 @@
 from time import time
 from os import listdir
-from pandas import read_parquet, read_csv, DataFrame
 from datetime import datetime as dt
-from modules import run_arima as ra
 from termcolor import  colored
+from pandas import read_parquet, read_csv, DataFrame, concat
+from modules import run_arima as ra
+from modules import arima_utils as au
 
-div = colored('********************************************************************','green')
+div = colored('\n********************************************************************','green')
 
 def log_to_parquet(in_file: str, out_file: str, file_cols: list, parquet_engine: str):
     # LOAD DATA FROM A LOG FILE AND SAVE IT ON A PARQUET FILE TO IMPROVE PERFORMANCE AT READING THE DATA
@@ -39,7 +40,7 @@ def an_detect(http_log_name: str, train: bool):
     if not http_parq_name in list_parq_files:
         log_to_parquet(http_log_name, http_parq_name, cols_log, P_ENGINE)
     
-    important_cols = ["ts","id_orig_h", "id_resp_p", "response_body_len"]
+    important_cols = ["ts","id_orig_h", "id_resp_p", "request_body_len"]
     df = read_parquet(http_parq_name, columns=important_cols)
     df["ts"] = list(map(
                     lambda date: 
@@ -56,13 +57,29 @@ def an_detect(http_log_name: str, train: bool):
     print(div,colored('\n test_DF','green'))
     print(test_df)
 
-    t_col = "response_body_len"
+    t_col = "request_body_len"
     if train:
         print(div,colored('\n Training...','green'))
         ra.get_pacf_acf(train_df, t_col)
-    model = ra.get_arima(test_df, t_col, 1, 10)
+    else:
+        ra.set_up(test_df, 1, 26, t_col)
 
-    
+        print(div, colored('\n Classical Inference', 'green'))
+        t_classical = ra.try_models(inference='classical', h=100, pv=40)
+
+        print(div, colored('\n Bayesian Inference', 'green'))
+        t_bayesian = ra.try_models(inference='bayesian', h=100, pv=40)
+        
+        all_exec_times = concat([t_classical, t_bayesian], ignore_index=True)
+        print(div,colored('\n Forecast exec times','green'))
+        print(all_exec_times)
+        au.plot(
+            x= all_exec_times['model_type'].tolist(),
+            y= all_exec_times['time'].tolist(),
+            title= 'Forecast exec times',
+            xlabel= 'model_type',
+            ylabel= 'time'
+        )
 
 
 def main():
@@ -77,7 +94,7 @@ def main():
     elapsedTime = round(time()-intiTime, 2)
     elapsedTime = str(elapsedTime/60) + \
         "m" if elapsedTime >= 60 else str(elapsedTime)+"s"
-    print("\nTiempo del proceso --->", elapsedTime)
+    print("\nGENERAL TIME --->", elapsedTime)
 
 
 main()

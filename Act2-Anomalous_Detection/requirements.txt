@@ -5,3 +5,4 @@ numpy
 statsmodels
 seaborn
 termcolor
+jupyter

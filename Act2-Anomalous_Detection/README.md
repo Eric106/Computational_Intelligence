@@ -35,3 +35,8 @@ analysis.
 
 If you prefer you can also execute the proyect with this: 
 `anomalous_detection.ipynb` Jupyter notebook.
+
+To run a Jupyter Notebook server execute the next comand to start it with the memory constraints (in Mb)
+```shell
+~$ jupyter notebook --NotebookApp.max_buffer_size=16384
+```
