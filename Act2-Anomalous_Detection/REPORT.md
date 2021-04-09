@@ -106,11 +106,11 @@ strong evidence against the null hypothesis(Ho), reject the null hypothesis. Dat
 
 ### Autocorrelation
 
-![alt text](./img/acf_zoom.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act2-Anomalous_Detection/img/acf_zoom.png?raw=true)
 
 ### Partial autocorrelation
 
-![alt text](./img/pacf_zoom.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act2-Anomalous_Detection/img/pacf_zoom.png?raw=true)
 
 Finally, a comparison was made between both inference models: classical and Bayesian. Within this analysis, the difference between MLE and PML was compared by the classical models, on the other hand, in the Bayesian models the Laplace model and the Metropolis-Hastings model were analyzed.
 
@@ -135,11 +135,11 @@ Second, when inspecting the information contained in the correlation and partial
 
 The time comparison from the first models to the latest model is also graphically displayed here.
 
-![alt text](./img/time.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act2-Anomalous_Detection/img/time.png?raw=true)
 
 2. It was identified that between the correlation and partial correlation graphs, there are patterns in the range from 2 to 5 and and from 13 to 16. For this same reason, it was also decided to discard the analysis of the entire range from 1 to 26.
 
-![alt text](./img/pattern.png)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act2-Anomalous_Detection/img/pattern.png?raw=true)
 
 As a last point, for the comparison of both inference models: classical and Bayesian, there were complications when obtaining two packages: OLS and BBVI. Both packages marked an internal error in `pyflux`, so the decision was made to only do the analysis using MLE, PML, Laplace and Metropolis-Hastings.
 
