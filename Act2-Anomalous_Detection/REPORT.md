@@ -133,9 +133,11 @@ Second, when inspecting the information contained in the correlation and partial
 3      bayesian: M-H  45.0088                        3.037051
 ```
 
-The time comparison from the first models to the latest model is also graphically displayed here.
+The comparison of time and the mean of the predicted values between the models is graphically displayed here. We can se that the algoritm of Metropolis-Hastings isn't the optimal for this tipe of data forecast, justified by the huge diferences in execution time and the avarage of predicted results. 
 
 ![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act2-Anomalous_Detection/img/time.png?raw=true)
+
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act2-Anomalous_Detection/img/forecast.png?raw=true)
 
 2. It was identified that between the correlation and partial correlation graphs, there are patterns in the range from 2 to 5 and and from 13 to 16. For this same reason, it was also decided to discard the analysis of the entire range from 1 to 26.
 
