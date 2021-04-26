@@ -1,4 +1,4 @@
-# ACT 1 -  Anomalous Detection
+# ACT 2 -  Anomalous Detection ARIMA
 
 ## Considerations
 

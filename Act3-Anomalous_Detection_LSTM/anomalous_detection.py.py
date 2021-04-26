@@ -7,7 +7,7 @@ from modules import run_arima
 
 def main():
     paths = {
-        "http":"Averaged_BearingTest_Dataset.csv"
+        "vibration":"Averaged_BearingTest_Dataset.csv"
     }
 
     intiTime = time()

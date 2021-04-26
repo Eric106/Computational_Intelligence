@@ -1,8 +1,8 @@
-# ACT 1 -  Anomalous Detection
+# ACT 3 -  Anomalous Detection LSTM
 
 ## Considerations
 
-After cloning this repo, dowload the file [http.log](https://experiencia21.tec.mx/courses/112876/files/44700556/download?download_frd=1) in the same folder of `anomalous_detection.py`.
+After cloning this repo, dowload the file [Averaged_BearingTest_Dataset.csv](https://experiencia21.tec.mx/courses/112876/files/46047059/download?download_frd=1) in the same folder of `anomalous_detection.py`.
 
 ## Execution
 
@@ -19,13 +19,7 @@ First make sure that the requirements are correctly installed. The dependencies 
 ```shell
 ~$ pip install -r requirements.txt
 ```
-`NOTE: to install pyflux`
 
-```shell
-~$ git clone https://github.com/RJT1990/pyflux.git
-~$ cd pyflux
-~$ pip install .
-```
 After getting the requirements run the below command to watch the data
 analysis.
 
@@ -35,8 +29,3 @@ analysis.
 
 If you prefer you can also execute the proyect with this: 
 `anomalous_detection.ipynb` Jupyter notebook.
-
-To run a Jupyter Notebook server execute the next comand to start it with the memory constraints (in Mb)
-```shell
-~$ jupyter notebook --NotebookApp.max_buffer_size=16384
-```
