@@ -1,12 +1,14 @@
 pandas
 matplotlib
+tensorflow
 keras
 pyarrow
 snappy
-numpy
+numpy==1.19.5
 statsmodels
 seaborn
 termcolor
 jupyter
 pylint
 autopep8
+rope

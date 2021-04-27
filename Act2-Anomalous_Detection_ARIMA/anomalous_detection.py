@@ -97,7 +97,7 @@ def main():
 
     intiTime = time()
 
-    an_detect(http_log_name=paths["http"], train=True)
+    an_detect(http_log_name=paths["http"], train=False)
     # an_detect(http_log_name=paths["http"], train=False)
 
     elapsedTime = round(time()-intiTime, 2)

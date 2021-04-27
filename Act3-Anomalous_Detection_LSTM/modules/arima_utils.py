@@ -27,13 +27,13 @@ def plot(x,y,title,xlabel,ylabel):
 def plot_acf(data):
     fig = plt.figure(figsize=(12, 8))
     ax1 = fig.add_subplot(211)
-    fig = sm.graphics.tsa.plot_acf(data, lags=40, ax=ax1)
+    fig = sm.graphics.tsa.plot_acf(data, ax=ax1)
     plt.show()
 
 def plot_pacf(data):
     fig = plt.figure(figsize=(12, 8))
     ax1 = fig.add_subplot(211)
-    fig = sm.graphics.tsa.plot_pacf(data, lags=40, ax=ax1)
+    fig = sm.graphics.tsa.plot_pacf(data, ax=ax1)
     plt.show()
 
 

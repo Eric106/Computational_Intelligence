@@ -2,18 +2,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
-
 from keras.models import Sequential
 from keras.layers.recurrent import LSTM
 from keras.layers.core import Dense, Activation, Dropout
-
-
-def load_data(csv_file,target_value):
-    print('Loading data... ')
-    data_b = pd.read_csv(csv_file,
-                         parse_dates=[0], infer_datetime_format=True)
-    data = data_b[target_value].values
-    return data
 
 def normalize(result):
     result_mean = result.mean()
@@ -33,6 +24,7 @@ def prepare_data(data, train_start, train_end, test_start, test_end,sequence_len
     temp = np.array(temp)
     if is_normalized == True:
         temp, temp_mean = normalize(temp)
+        del temp_mean
     print("Training data shape  : ", temp.shape)
 
     train = temp[train_start:train_end, :]
@@ -113,13 +105,14 @@ def predict(model, set_values_toPredict):
 def plot_training_results (history):
     # plot the training losses
     fig, ax = plt.subplots(figsize=(14, 6), dpi=80)
+    del fig
     ax.plot(history.history['loss'], 'b', label='Train', linewidth=2)
     ax.plot(history.history['val_loss'], 'r', label='Validation', linewidth=2)
     ax.set_title('Model loss', fontsize=16)
     ax.set_ylabel('Loss (mae)')
     ax.set_xlabel('Epoch')
     ax.legend(loc='upper right')
-    plt.savefig('figures/cpu.plot.training.result.png')
+    plt.savefig('img/cpu.plot.training.result.png')
 
 def plot_model_result(global_start_time, y_test, predicted):
     try:
@@ -128,51 +121,10 @@ def plot_model_result(global_start_time, y_test, predicted):
         plt.plot(predicted[:len(y_test)], 'g', label='Predicted')
         plt.plot(((y_test - predicted) ** 2), 'r', label='Root-mean-square deviation')
         plt.legend()
-        plt.savefig('figures/cpu.plot.model.result.png')
+        plt.savefig('img/cpu.plot.model.result.png')
     except Exception as e:
         print("plotting exception")
         print(str(e))
     print('Training duration:{}'.format(time.time() - global_start_time))
 
 
-
-def run(data_path,is_normalized,target_value, epochs, batch_size,validation_split, loss, optimizer, metrics):
-    sequence_length= 100
-    global_start_time = time.time()
-
-    print('Loading data... ')
-    data = load_data(data_path,target_value)
-
-    print('Prepare data... ')
-    # train on first 700 samples and test on next 300 samples (test set has anomaly)
-    X_train, y_train, X_test, y_test = prepare_data(data, 0, 600, 400, 660,sequence_length,is_normalized)
-
-    print('Genetate Model... ')
-    model = generate_model(sequence_length,loss, optimizer, metrics)
-
-    print('Training data... ')
-    history = fit(model, X_train, y_train,batch_size, epochs, validation_split,global_start_time)
-
-    print('Plot Fit results... ')
-    plot_training_results(history)
-
-    print("Predicting...")
-    predicted = predict(model,X_test)
-
-    print('Plot Predict results... ')
-    plot_model_result(global_start_time, y_test, predicted)
-
-    return predicted
-
-
-# target_value ='cpu'
-# data_path='resources/cpu-full-b-1-1.csv'
-# is_normalized=True
-# epochs = 3
-# batch_size = 50
-# validation_split=0.05
-# loss='mean_squared_error'
-# optimizer='rmsprop'
-# metrics=['mean_squared_error', 'mean_absolute_error', 'mean_absolute_percentage_error']
-
-# predicted = run(data_path,is_normalized, target_value,epochs, batch_size,validation_split, loss, optimizer, metrics)
