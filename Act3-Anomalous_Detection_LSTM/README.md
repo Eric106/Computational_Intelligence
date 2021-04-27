@@ -19,6 +19,13 @@ First make sure that the requirements are correctly installed. The dependencies 
 ```shell
 ~$ pip install -r requirements.txt
 ```
+`NOTE: to install pyflux`
+
+```shell
+~$ git clone https://github.com/RJT1990/pyflux.git
+~$ cd pyflux
+~$ pip install .
+```
 
 After getting the requirements run the below command to watch the data
 analysis.

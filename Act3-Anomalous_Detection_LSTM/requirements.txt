@@ -1,0 +1,12 @@
+pandas
+matplotlib
+keras
+pyarrow
+snappy
+numpy
+statsmodels
+seaborn
+termcolor
+jupyter
+pylint
+autopep8
