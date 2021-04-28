@@ -55,5 +55,5 @@ def run(df:DataFrame, target_col:str, dict_config:dict):
     pv = dict_config['pv']
     train_df, test_df = slice_dataFrame(df, test_size)
     get_pacf_acf(train_df, target_col)
-    try_model(test_df, target_col, target_method, AR, MA, h, pv)
-
+    prediction = try_model(test_df, target_col, target_method, AR, MA, h, pv)
+    return prediction

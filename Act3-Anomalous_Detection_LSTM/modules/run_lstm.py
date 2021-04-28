@@ -1,6 +1,10 @@
 from time import time
 from . import lstm_utils as lu # pylint: disable=relative-beyond-top-level
 from pandas import DataFrame
+from termcolor import  colored
+
+div1 = colored('\n********************************************************************','green')
+
 
 def get_test_idx(len_values:int, slice_size: float):
     idx_cut = int((len_values)*(1-slice_size))
@@ -23,28 +27,29 @@ def run(df:DataFrame, target_value:str, dict_config:dict):
     sequence_length= 100
     global_start_time = time()
 
-    print('Prepare data... ')
+    print(div1,colored('\nPrepare data... ','green'))
     # train on first 700 samples and test on next 300 samples (test set has anomaly)
     X_train, y_train, X_test, y_test = lu.prepare_data(
         data, train_start, train_end, test_start, test_end, sequence_length, is_normalized)
 
-    print('Genetate Model... ')
+    print(div1,colored('\nGenetate Model... ','green'))
     model = lu.generate_model(sequence_length, loss, optimizer, metrics)
 
-    print('Training data... ')
+    print(div1,colored('\nTraining data... ','green'))
     history = lu.fit(model, X_train, y_train, batch_size,
                      epochs, validation_split, global_start_time)
 
-    print('Plot Fit results... ')
+    print(div1,colored('\nPlot Fit results... ','green'))
     lu.plot_training_results(history)
 
-    print("Predicting...")
+    print(div1,colored('\nPredicting...','green'))
     predicted = lu.predict(model, X_test)
-
-    print('Plot Predict results... ')
+    print(predicted)
+    
+    print(div1,colored('\nPlot Predict results... ','green'))
     lu.plot_model_result(global_start_time, y_test, predicted)
 
-    return predicted
+    return predicted.tolist()
 
 
 # target_value ='cpu'

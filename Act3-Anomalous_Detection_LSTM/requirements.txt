@@ -1,5 +1,6 @@
 pandas
 matplotlib
+psutil
 tensorflow
 keras
 pyarrow
@@ -12,3 +13,4 @@ jupyter
 pylint
 autopep8
 rope
+ipynb-py-convert

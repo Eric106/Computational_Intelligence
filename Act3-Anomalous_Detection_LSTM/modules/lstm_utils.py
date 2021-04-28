@@ -112,7 +112,8 @@ def plot_training_results (history):
     ax.set_ylabel('Loss (mae)')
     ax.set_xlabel('Epoch')
     ax.legend(loc='upper right')
-    plt.savefig('img/cpu.plot.training.result.png')
+    plt.show()
+    # plt.savefig('img/cpu.plot.training.result.png')
 
 def plot_model_result(global_start_time, y_test, predicted):
     try:
@@ -121,7 +122,8 @@ def plot_model_result(global_start_time, y_test, predicted):
         plt.plot(predicted[:len(y_test)], 'g', label='Predicted')
         plt.plot(((y_test - predicted) ** 2), 'r', label='Root-mean-square deviation')
         plt.legend()
-        plt.savefig('img/cpu.plot.model.result.png')
+        plt.show()
+        # plt.savefig('img/cpu.plot.model.result.png')
     except Exception as e:
         print("plotting exception")
         print(str(e))
