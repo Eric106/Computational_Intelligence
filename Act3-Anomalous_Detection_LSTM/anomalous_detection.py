@@ -49,7 +49,7 @@ def run_arima(file:str, column:str):
     ARIMA_config = {
         'test_size': 0.2,
         'AR': 1,
-        'MA': 40,
+        'MA': 50,
         'target_method': 'PML',
         'h': 100,
         'pv': 40
