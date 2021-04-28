@@ -2,13 +2,13 @@ from threading import Thread
 from time import time, sleep
 from statistics import mean, stdev
 from psutil import cpu_percent
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 from termcolor import  colored
 from modules import run_arima as ARIMA
 from modules import run_lstm as LSTM
 
 
-def exec_time(func, args:list) -> tuple:
+def exec_time(func, args:list) -> str:
     '''
     Function that measures execution time of a given function
     '''
@@ -21,7 +21,7 @@ def exec_time(func, args:list) -> tuple:
     return str(elapsedTime)+'s'
 
 
-def get_cpu_utilization():
+def get_cpu_utilization() -> Thread:
 
     def cpu_util():
         cpu_data = []
@@ -35,7 +35,7 @@ def get_cpu_utilization():
     )
 
 
-def csv_to_df(csv_file:str):
+def csv_to_df(csv_file:str) -> DataFrame:
     '''returns numpy array of values from a dataFrame)'''
     print('Loading data... ')
     df = read_csv(csv_file, parse_dates=[0], infer_datetime_format=True)
