@@ -32,7 +32,7 @@ def run(df:DataFrame, target_value:str, dict_config:dict):
     X_train, y_train, X_test, y_test = lu.prepare_data(
         data, train_start, train_end, test_start, test_end, sequence_length, is_normalized)
 
-    print(div1,colored('\nGenetate Model... ','green'))
+    print(div1,colored('\nGenerate Model... ','green'))
     model = lu.generate_model(sequence_length, loss, optimizer, metrics)
 
     print(div1,colored('\nTraining data... ','green'))

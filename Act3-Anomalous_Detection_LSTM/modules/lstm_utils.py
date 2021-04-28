@@ -127,6 +127,6 @@ def plot_model_result(global_start_time, y_test, predicted):
     except Exception as e:
         print("plotting exception")
         print(str(e))
-    print('Training duration:{}'.format(time.time() - global_start_time))
+#     print('Training duration:{}'.format(time.time() - global_start_time))
 
 

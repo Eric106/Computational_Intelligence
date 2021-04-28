@@ -61,7 +61,7 @@ def run_arima(file:str, column:str):
     cpu_thread.join()
     print('All dataset average: ', round(mean(df[column].tolist()),4))
     print('Predicted dataset average: ', round(mean(prediction),4))
-    print('All dataset st_deviation: ',round(stdev(df[column].tolist()),4))
+    print('All dataset st_deviation: ', round(stdev(df[column].tolist()),4))
     print('Predicted dataset st_deviation: ',round(stdev(prediction),4))
 
 
@@ -72,8 +72,8 @@ def run_lstm(file:str, column:str):
     LSTM_config = {
         'test_size': 0.2,
         'is_normalized': True,
-        'epochs': 10,
-        'batch_size': 10,
+        'epochs': 40,
+        'batch_size': 80,
         'validation_split': 0.05,
         'loss': 'mean_squared_error',
         'optimizer': 'rmsprop',
@@ -86,7 +86,7 @@ def run_lstm(file:str, column:str):
     cpu_thread.join()
     print('All dataset average: ', round(mean(df[column].tolist()),4))
     print('Predicted dataset average: ', round(mean(prediction),4))
-    print('All dataset st_deviation: ',round(stdev(df[column].tolist()),4))
+    print('All dataset st_deviation: ', round(stdev(df[column].tolist()),4))
     print('Predicted dataset st_deviation: ',round(stdev(prediction),4))
 
 
