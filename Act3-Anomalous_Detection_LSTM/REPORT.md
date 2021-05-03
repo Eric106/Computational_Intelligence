@@ -59,7 +59,7 @@ In addition to measuring performance in terms of runtime and CPU consumption, th
 
 #### Figure 1
 
-![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/forecast.bearing.png?raw=true)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/bearing.png?raw=true)
 
 In the case of LSTM, in order to optimize its accuracy, the information was normalized to avoid a considerable difference between one value and another. Likewise, 70% of the dataset was taken for training with a batch size of 80, leaving the training in 40 epochs and a number of 9 iterations for each epoch.
 
