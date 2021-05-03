@@ -1,25 +1,27 @@
 # ACT 3 - Anomalous Detection LSTM
 
     Eric Gómez - A01378838
-    Felipe Osornio - A01377154  
-    Rafael Moreno - A01378916  
+    Felipe Osornio - A01377154
+    Rafael Moreno - A01378916
     Uriel Pineda - A01379633
     Hector Hernandez - A01374009
 
 ---
-## Introduction
-- que es LSTM mas
-- breve ARIMA
 
-KEY WORDS:
-epoch = one epoch pass through the neural network all the training dataset divided in batchs
-batch_size = how many item/values inside the batch
+## Introduction
+
+To this task, a comparison was made between two anomalous detection system using a dataset of vibration sensor readings used by the NASA Acoustics and Vibration Database. The analysis was made through the ARIMA and the Long Short-Term Memory. This latter is an artificial recurrent neural network arquitecture that is well-suited to classifying, processing and making pediction based on time series data.
 
 ---
+
 ## Methodology
 
+Of this first part we implemented the ARIMA and the LSTM to make the anomalous detection inside the vibration sensor dataset. The most important improvement in this part was the modularity refactoring between the algorithms calls ([ARIMA](https://github.com/Eric106/Computational_Intelligence/blob/d9151ab20aad06b439874f99e4781e93a03341ae/Act3-Anomalous_Detection_LSTM/anomalous_detection.py#L59), [LSTM](https://github.com/Eric106/Computational_Intelligence/blob/d9151ab20aad06b439874f99e4781e93a03341ae/Act3-Anomalous_Detection_LSTM/anomalous_detection.py#L84))  and the parameters ([ARIMA](https://github.com/Eric106/Computational_Intelligence/blob/d9151ab20aad06b439874f99e4781e93a03341ae/Act3-Anomalous_Detection_LSTM/anomalous_detection.py#L49), [LSTM](https://github.com/Eric106/Computational_Intelligence/blob/d9151ab20aad06b439874f99e4781e93a03341ae/Act3-Anomalous_Detection_LSTM/anomalous_detection.py#L72)). 
 
-- how CPU & exec_time
+After that, we compare the execution time and CPU consumption of these two anomalous detection systems during the training and the predition. 
+
+### Execution time 
+
 ```python
 def exec_time(func, args:list) -> str:
     '''
@@ -32,8 +34,11 @@ def exec_time(func, args:list) -> str:
         print('ERROR: ',e)
     elapsedTime = round(time()-intiTime, 2)
     return str(elapsedTime)+'s'
+```
 
+### CPU consumption
 
+```python
 def get_cpu_utilization() -> Thread:
 
     def cpu_util():
@@ -47,59 +52,19 @@ def get_cpu_utilization() -> Thread:
         target=cpu_util
     )
 ```
-- modularize ARIMA and LSTM to call it easy
-```python
-def run_arima(file:str, column:str):
-    global IS_Process_end
-    IS_Process_end = False
-    df = csv_to_df(file)
-    ARIMA_config = {
-        'test_size': 0.2,
-        'AR': 1,
-        'MA': 50,
-        'target_method': 'PML',
-        'h': 100,
-        'pv': 40
-    }
-    cpu_thread = get_cpu_utilization()
-    cpu_thread.start()
-    prediction = ARIMA.run(df, column, ARIMA_config)
-    IS_Process_end = True
-    cpu_thread.join()
-    print('All dataset average: ', round(mean(df[column].tolist()),4))
-    print('Predicted dataset average: ', round(mean(prediction),4))
-    print('All dataset st_deviation: ', round(stdev(df[column].tolist()),4))
-    print('Predicted dataset st_deviation: ',round(stdev(prediction),4))
+
+In addition to measuring performance in terms of runtime and CPU consumption, the accuracy between the two models was also compared and measured using the minimum loss error function. In the case of ARIMA, as it's a statistical and iterative model; an optimal predicted standard deviation was obtained. Even as can be seen in the [following graph](#figure-1) the bearing was adjusted until a stable pattern was found.
+
+#### Figure 1
 
 
-def run_lstm(file:str, column:str):
-    global IS_Process_end
-    IS_Process_end = False
-    df = csv_to_df(file)
-    LSTM_config = {
-        'test_size': 0.2,
-        'is_normalized': True,
-        'epochs': 40,
-        'batch_size': 80,
-        'validation_split': 0.05,
-        'loss': 'mean_squared_error',
-        'optimizer': 'rmsprop',
-        'metrics': ['mean_absolute_percentage_error']
-    }
-    cpu_thread = get_cpu_utilization()
-    cpu_thread.start()
-    prediction = LSTM.run(df, column, LSTM_config)
-    IS_Process_end = True
-    cpu_thread.join()
-    print('All dataset average: ', round(mean(df[column].tolist()),4))
-    print('Predicted dataset average: ', round(mean(prediction),4))
-    print('All dataset st_deviation: ', round(stdev(df[column].tolist()),4))
-    print('Predicted dataset st_deviation: ',round(stdev(prediction),4))
-```
-- how to decide the ARIMA (graficas) and LSTM run allot to set config (refrence to FINDS) values & normalize(paper que mando) data
 
+
+
+In the case of LSTM, in order to optimize its accuracy, the information was normalized to avoid a considerable difference between one value and another.
 
 ---
+
 ## Finds
 
 ```python
@@ -110,6 +75,7 @@ All dataset st_deviation:  0.0402
 Predicted dataset st_deviation:  0.0308
 ARIMA TIME:  87.1 s
 ```
+
 ```python
 CPU utilization:  60.42 %
 All dataset average:  0.081
@@ -118,21 +84,23 @@ All dataset st_deviation:  0.0402
 Predicted dataset st_deviation:  1.4887
 LSTM TIME: 60.54 s
 ```
-- LSTM epoch*2 >= batch_size >= epoch 
+
+- LSTM epoch\*2 >= batch_size >= epoch
 - comparaciones outputs
-    <> +batch_size mayor ruido y menor tiempo de procesamiento por cada item/value
-    <> -batch_size menor ruido pero mayor tiempo de procesamiento por cada item/value
-    <> LSTM +cpu -exec_time
-    <> ARIMA -cpu +exec_time
-    <> fig1.LSTM +epoch -(minimum loss error function) --> +epochs mayor precision
-    <> fi2.LSTM +good prediction
-    <> ARIMA(classical inference PML) la prediccion tiene unos datos menos dispersos (std_dev) y el promedio de valore es mas parecida al dataset original
-    <> LSTM la prediccion arroja datos mas dispersos y en promedio tiene valores mas altos que el dataset original.
- 
+  <> +batch_size mayor ruido y menor tiempo de procesamiento por cada item/value
+  <> -batch_size menor ruido pero mayor tiempo de procesamiento por cada item/value
+  <> LSTM +cpu -exec_time
+  <> ARIMA -cpu +exec_time
+  <> fig1.LSTM +epoch -(minimum loss error function) --> +epochs mayor precision
+  <> fi2.LSTM +good prediction
+  <> ARIMA(classical inference PML) la prediccion tiene unos datos menos dispersos (std_dev) y el promedio de valore es mas parecida al dataset original
+  <> LSTM la prediccion arroja datos mas dispersos y en promedio tiene valores mas altos que el dataset original.
+
 ---
+
 ## Conclusion
+
 - ARIMA tiende a generar valores estimados menos dispersos y un poco mas acercados al data set original, debido a que es un metodo de inferencia clasica.
 - LSTM jala pero entre mas epochs le pongas mayor sera la presicion
 - para un analisis inicial de anomalias es una buena herramienta ya que puedes darte una buen idea con pocas "epochs"
 - y lo unico negativo seria que el LSTM consume mas 'cpu' que ARIMA
-
