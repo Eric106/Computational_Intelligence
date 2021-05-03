@@ -10,7 +10,9 @@
 
 ## Introduction
 
-To this task, a comparison was made between two anomalous detection system using a dataset of vibration sensor readings used by the NASA Acoustics and Vibration Database. The analysis was made through the ARIMA and the Long Short-Term Memory. This latter is an artificial recurrent neural network arquitecture that is well-suited to classifying, processing and making pediction based on time series data.
+To this task, a comparison was made between two anomalous detection system using a dataset of vibration sensor readings used by the NASA Acoustics and Vibration Database. The analysis was made using the ARIMA and the Long Short-Term Memory. This latter is an artificial recurrent neural network arquitecture that is well-suited to classifying, processing and making pediction based on time series data.
+
+In addition, the execution time, CPU consumption and the accuracy that existed between each of them were measured. This comparison is important because the ARIMA focuses mainly on obtaining results using some statistical techniques; such as variation and regression. While in the case of the LSTM, its main function is to execute epochs. Epochs are iterations through the entire neural network that are dedicated to defining the entire batch training data set. It is also important to mention that the size of the batch depends on how many item / values there are within it.
 
 ---
 
@@ -57,11 +59,19 @@ In addition to measuring performance in terms of runtime and CPU consumption, th
 
 #### Figure 1
 
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/forecast.bearing.png?raw=true)
 
+In the case of LSTM, in order to optimize its accuracy, the information was normalized to avoid a considerable difference between one value and another. Likewise, 70% of the dataset was taken for training with a batch size of 80, leaving the training in 40 epochs and a number of 9 iterations for each epoch.
 
+FInally, to the case of the LSTM the following two graphs were obtained: 
 
+#### Figure 2
 
-In the case of LSTM, in order to optimize its accuracy, the information was normalized to avoid a considerable difference between one value and another.
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/cpu.plot.model.result.png?raw=true)
+
+#### Figure 3
+
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/cpu.plot.training.result.png?raw=true)
 
 ---
 
