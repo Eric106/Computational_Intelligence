@@ -71,7 +71,7 @@ Finally, to the case of the LSTM the following two graphs were obtained:
 
 In this graph he compares the error against the number of epochs executed between the training dataset and the test dataset.
 
-![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/cpu.plot.model.result.png?raw=true)
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/model.predict.png?raw=true)
 
 Regarding this graph, the comparison is made between the observed, the predicted and the root-mean-square deviation.
 
