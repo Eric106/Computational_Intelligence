@@ -63,19 +63,23 @@ In addition to measuring performance in terms of runtime and CPU consumption, th
 
 In the case of LSTM, in order to optimize its accuracy, the information was normalized to avoid a considerable difference between one value and another. Likewise, 70% of the dataset was taken for training with a batch size of 80, leaving the training in 40 epochs and a number of 9 iterations for each epoch.
 
-FInally, to the case of the LSTM the following two graphs were obtained: 
+Finally, to the case of the LSTM the following two graphs were obtained: 
 
 #### Figure 2
 
+![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/model.loss.png?raw=true)
+
+In this graph he compares the error against the number of epochs executed between the training dataset and the test dataset.
+
 ![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/cpu.plot.model.result.png?raw=true)
 
-#### Figure 3
-
-![alt text](https://github.com/Eric106/Computational_Intelligence/blob/master/Act3-Anomalous_Detection_LSTM/img/cpu.plot.training.result.png?raw=true)
+Regarding this graph, the comparison is made between the observed, the predicted and the root-mean-square deviation.
 
 ---
 
 ## Finds
+
+Among the most important findings is the comparison of CPU consumption, the predicted standard deviation of the set and its execution time. This comparison is shown below.
 
 ```python
 CPU utilization:  21.72 %
@@ -95,22 +99,30 @@ Predicted dataset st_deviation:  1.4887
 LSTM TIME: 60.54 s
 ```
 
-- LSTM epoch\*2 >= batch_size >= epoch
-- comparaciones outputs
-  <> +batch_size mayor ruido y menor tiempo de procesamiento por cada item/value
-  <> -batch_size menor ruido pero mayor tiempo de procesamiento por cada item/value
-  <> LSTM +cpu -exec_time
-  <> ARIMA -cpu +exec_time
-  <> fig1.LSTM +epoch -(minimum loss error function) --> +epochs mayor precision
-  <> fi2.LSTM +good prediction
-  <> ARIMA(classical inference PML) la prediccion tiene unos datos menos dispersos (std_dev) y el promedio de valore es mas parecida al dataset original
-  <> LSTM la prediccion arroja datos mas dispersos y en promedio tiene valores mas altos que el dataset original.
+To estimate a convenient batch size for the execution of the model, it is recommended that this value is between twice the epoch number as the maximum value and the epoch number as the minimum value. This can be represented as follows:
+
+```
+epoch * 2 >= batch_size >= epoch
+```
+
+Regarding the comparison between these two outputs are the following points:
+
+- As the batch size increases, there will be a greater amount of noise, but less processing time for each item / value.
+
+- Otherwise, if the batch size decreases, the noise number will be less, however the processing time increases.
+
+- The LSTM has a higher CPU consumption, however the execution time decreases.
+
+- On the other hand, the ARIMA has a lower CPU consumption, but the execution time increases.
+
+- As can be seen in the [following graph](#figure-2). As the number of epochs increases, the minimum loss erros function decreases, which indicates that the precision increases.
+
+Finally, it can be seen that the LSTM has a prediction that yields more dispersed data and on average has higher values ​​than the original dataset. As for the ARIMA, being a classical inference PML, the prediction of the data is less dispersed and the average of the values ​​is more similar to the original dataset.
 
 ---
 
 ## Conclusion
 
-- ARIMA tiende a generar valores estimados menos dispersos y un poco mas acercados al data set original, debido a que es un metodo de inferencia clasica.
-- LSTM jala pero entre mas epochs le pongas mayor sera la presicion
-- para un analisis inicial de anomalias es una buena herramienta ya que puedes darte una buen idea con pocas "epochs"
-- y lo unico negativo seria que el LSTM consume mas 'cpu' que ARIMA
+In conclusion, the ARIMA tends to generate estimated values that are less dispersed and a little closer to the original data set, because it is a classical inference method, that is, the work is more mechanical and it is widely possible that these data will be adjusted since As the iterations pass, the variation between these data decreases.
+
+The LSTM is quite functional to make these kinds of predictions quickly in order to get a general idea. However, if you want to improve the accuracy you need to consider adding more epochs. Not taking into account that it consumes more CPU, in contrast to the ARIMA.
