@@ -5,7 +5,7 @@ tensorflow
 keras
 pyarrow
 snappy
-numpy==1.19.5
+numpy==1.22.4
 statsmodels
 seaborn
 termcolor
